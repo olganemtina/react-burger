@@ -1,6 +1,4 @@
-import React from 'react';
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
-import PropTypes from 'prop-types';
 
 export default function IngredientDetails(props) {
     return (

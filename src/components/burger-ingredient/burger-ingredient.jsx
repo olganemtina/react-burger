@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 
 export default function BurgerIngredient(props) {

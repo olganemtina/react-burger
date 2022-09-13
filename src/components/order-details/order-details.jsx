@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import doneImg from '../../images/done.svg';
 
 export default function OrderDetails(props) {
-
 	return (
 		<div className='text_align_center'>
 			<div className='text text_type_digits-large'>789879</div>

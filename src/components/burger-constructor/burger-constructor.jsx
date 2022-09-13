@@ -1,68 +1,74 @@
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
+import { useMemo, useState } from 'react';
+import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
+import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
-import PropTypes from 'prop-types';
+import style from './burger-constructor.module.css';
 
 export default function BurgerConstructor(props) {
+	const [bun1, bun2] = useMemo(()=>{
+		return props.ingredients.filter(x=>x.type==='bun');
+	}, [props.ingredients]);
+
+	const ingredients = useMemo(()=>{
+		return props.ingredients.filter(x=>x.type!=='bun');
+	}, [props.ingredients]);
+
 	const [state, setState] = useState({
         visible: false
     });
 
-	const scrollContainer = useRef(null);
-
-
-	useEffect(()=>{
-        const headerH = document.getElementsByTagName("header")[0].offsetHeight;
-        const h1H= document.getElementsByTagName("h1")[0].offsetHeight;
-        const tabsH = document.getElementsByClassName("tabs")[0].offsetHeight;
-		const totalPriceContainerH = document.getElementsByClassName("total_price_container")[0].offsetHeight;
-        const bottomH = 100;
-        const heightH = window.innerHeight - headerH - h1H - tabsH - totalPriceContainerH - bottomH;
-        scrollContainer.current.setAttribute("style","height:"+heightH+"px; overflow: auto");
-    },[])
-
-	let handleOpenModal = useCallback(()=>{
+	const handleOpenModal =()=>{
         setState({
             visible:true
         });
-    }, []);
+    };
 
-	let handleCloseModal = useCallback((e)=>{
-        if(e.target === e.currentTarget || e.target.closest(".close-button") || e.code === "Escape")
-        {
-            setState({
-                visible:false
-            });
-        }
-    },[]);
+	const handleCloseModal = (e)=>{
+		setState({
+			visible:false
+		});
+    };
 
-	let totalPrice = useMemo(()=>{
+	const totalPrice = useMemo(()=>{
 		return props.ingredients.reduce((sum, current)=>{
 			return sum + current.price;
 		}, 0)
 	}, [props.ingredients])
 
-
-
 	return (
 		<div>
-			<div ref={scrollContainer}>
-				{props.ingredients.map((x, i)=>{
-					return (
-						<div key={x._id} className='mt-4 mb-4' style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-							{(i !== 0 && i !== props.ingredients.length-1) && <DragIcon type="primary" />}
-							{(i === 0 || i === props.ingredients.length-1) && <span className='mr-6'></span>}
-							<ConstructorElement
-							type={i==0 ? "top" : (i==props.ingredients.length-1 ? "bottom": undefined)}
-							text={x.name}
-							price={x.price}
-							thumbnail={x.image_mobile}
-							/>
-						</div>
-					)
-				})}
+			<div className={style.scroll_container}>
+				{bun1  &&
+					<BurgerConstructorItem
+						key='bun1'
+						draggable={false}
+						name={bun1.name}
+						price={bun1.price}
+						type='top'
+						image_mobile={bun1.image_mobile}/>}
+				{ingredients.map((x)=>{
+						return (
+							<BurgerConstructorItem
+								key={x._id}
+								item_key={x._id}
+								draggable={true}
+								name={x.name}
+								price={x.price}
+								type=''
+								image_mobile={x.image_mobile}/>
+						)
+					})}
+				{bun2 &&
+					<BurgerConstructorItem
+						key='bun2'
+						draggable={false}
+						name={bun2.name}
+						price={bun2.price}
+						type='bottom'
+						image_mobile={bun2.image_mobile}/>}
 			</div>
 			<div className='mt-10 text-align-right total_price_container'>
 				<span className='inline-flex mr-10 text text_type_digits-medium'>
@@ -76,16 +82,16 @@ export default function BurgerConstructor(props) {
 				</Button>
 			</div>
 			{
-				state.visible && 
+				state.visible &&
 				<Modal header="" onClose={handleCloseModal} >
 					<OrderDetails />
-				</Modal> 
+				</Modal>
 			}
-		</div>
+	</div>
 	)
 }
 
 BurgerConstructor.propTypes = {
-    ingredients: PropTypes.arrayOf(ingredientPropTypes)
+    ingredients: PropTypes.arrayOf(ingredientPropTypes),
 };
 

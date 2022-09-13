@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import IngredientDetails from '../ingredient-details/ingredient-details'
-import Modal from '../modal/modal';
-import BurgerIngredient from '../burger-ingredient/burger-ingredient';
-import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import PropTypes from 'prop-types';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
+import BurgerIngredient from '../burger-ingredient/burger-ingredient';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import Modal from '../modal/modal';
+import style from './burger-ingredients.module.css';
 
-let getCaption = (type)=>{
+const getCaption = (type)=>{
     switch(type) {
         case "bun":
             return "Булки"
@@ -15,7 +16,6 @@ let getCaption = (type)=>{
         case "sauce":
             return "Соусы"
     }
-
 }
 
 export default function BurgerIngredients(props) {
@@ -25,16 +25,6 @@ export default function BurgerIngredients(props) {
 
     const [detailedIngredient, setDetailedIngredient] = useState({});
 
-    const scrollContainer = useRef(null);
-
-    useEffect(()=>{
-        const headerH = document.getElementsByTagName("header")[0].offsetHeight;
-        const h1H= document.getElementsByTagName("h1")[0].offsetHeight;
-        const tabsH = document.getElementsByClassName("tabs")[0].offsetHeight;
-        const bottomH = 100;
-        const heightH = window.innerHeight - headerH - h1H - tabsH - bottomH;
-        scrollContainer.current.setAttribute("style","height:"+heightH+"px; overflow: auto");
-    },[])
 
     const handleOpenModal = useCallback((ingredient)=>{
         setState({
@@ -46,61 +36,79 @@ export default function BurgerIngredients(props) {
     }, [])
 
     const handleCloseModal = useCallback((e)=>{
-        if(e.target === e.currentTarget || e.target.closest(".close-button") || e.code === "Escape")
-        {
-            setState({
-                visible:false
-            });
-            setDetailedIngredient({});
-        }
+        setState({
+            visible:false
+        });
+        setDetailedIngredient({});
     },[])
 
 
     const groupedIngredients = useMemo(()=>{
         return props.ingredients.reduce((acc, current)=>{
-            if(acc[current.type])
-            {
-                acc[current.type].push(current);
-            }
-            else
-            {
-                acc[current.type] = [current];
-            }
-            return acc;
+                if(acc[current.type])
+                {
+                    acc[current.type].push(current);
+                }
+                else
+                {
+                    acc[current.type] = [current];
+                }
+                return acc;
         }, []);
     }, [props.ingredients]);
+
+    const refBun = useRef(null);
+    const refMain = useRef(null);
+    const refSauce = useRef(null);
+
+    const getRef = (type)=>{
+        switch(type) {
+            case "bun":
+                return refBun;
+            case "main":
+                return refMain;
+            case "sauce":
+                return refSauce;
+        }
+    }
+
+    const goToBlock = (ref)=>{
+        ref.current?.scrollIntoView({behavior: 'smooth'});
+    }
+
 
 
     return (
         <div>
             <h1 className='text text_type_main-large mb-5'>Соберите бургер</h1>
             <div className='tabs' style={{ display: 'flex' }}>
-                <Tab value="1"  >
+                <Tab value="bun" onClick={()=>goToBlock(refBun)} >
                     Булки
                 </Tab>
-                <Tab value="2"  >
+                <Tab value="sauce" onClick={()=>goToBlock(refSauce)}>
                     Соусы
                 </Tab>
-                <Tab value="3"  >
+                <Tab value="main" onClick={()=>goToBlock(refMain)}>
                     Начинки
                 </Tab>
             </div>
-            <div ref={scrollContainer}>
-                {
+            <div className={style.scroll_container}>
+
+                    {
                     Object.entries(groupedIngredients).map(([key, value])=>{
                         return (
-                            <div key={key}>
+                            <div key={key} ref={getRef(key)}>
                                 <h2 className='pb-6 pt-10 text text_type_main-medium'>{getCaption(key)}</h2>
                                 <div className='display_flex flex-wrap pl-4 pr-4 pb-10'>
                                 {value.map((x, i)=>{
                                     return(
                                     <div style={{flex:1}} key={x._id}>
-                                        <BurgerIngredient 
+                                        <BurgerIngredient
                                             count={i == 0 ? 1 : 0}
-                                            handleOpenModal={()=>handleOpenModal(x)} 
-                                            description="20" 
-                                            imgSrc={x.image} 
-                                            caption={x.name} 
+                                            handleOpenModal={()=>handleOpenModal(x)}
+                                            description="20"
+                                            imgSrc={x.image}
+                                            caption={x.name}
                                         />
                                     </div>)
                                 })}
