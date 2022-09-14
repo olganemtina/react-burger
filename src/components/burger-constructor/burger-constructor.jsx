@@ -1,6 +1,6 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
@@ -20,17 +20,17 @@ export default function BurgerConstructor(props) {
         visible: false
     });
 
-	const handleOpenModal =()=>{
-        setState({
+	const handleOpenModal = useCallback(()=>{
+		setState({
             visible:true
         });
-    };
+	}, []);
 
-	const handleCloseModal = (e)=>{
+	const handleCloseModal = useCallback(()=>{
 		setState({
-			visible:false
-		});
-    };
+            visible:false
+        });
+	}, []);
 
 	const totalPrice = useMemo(()=>{
 		return props.ingredients.reduce((sum, current)=>{
