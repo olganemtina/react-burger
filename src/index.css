@@ -5,9 +5,62 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #131316;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.display_flex{
+  display: flex;
+}
+
+.flex-wrap{
+  flex-wrap: wrap;
+}
+
+.inline-flex{
+	display: inline-flex;
+}
+
+.text-align-right{
+  text-align: right;
+}
+
+.text_align_center{
+  text-align: center;
+}
+
+.display_flex-center{
+  justify-content: center;
+  align-items: center;
+}
+
+.display_flex_space_between{
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cursor_pointer{
+  cursor: pointer;
+}
+
+.position_relative{
+  position:relative;
+}
+
+@font-face {
+  font-family: 'JetBrainsMonoRegular';
+  font-style: normal;
+  font-weight: 700;
+  src: url("../node_modules/@ya.praktikum/react-developer-burger-ui-components/dist/ui/fonts/JetBrainsMono-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Iceland';
+  font-style: normal;
+  font-weight: 700;
+  src: url("../node_modules/@ya.praktikum/react-developer-burger-ui-components/dist/ui/fonts/iceland.woff") format("woff");
 }

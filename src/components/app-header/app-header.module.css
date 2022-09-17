@@ -1,0 +1,11 @@
+
+a svg {
+	display: inline-block;
+	vertical-align: middle;
+	color: #8585AD !important;
+}
+
+a{
+	color: #8585AD;
+	text-decoration: none;
+}
