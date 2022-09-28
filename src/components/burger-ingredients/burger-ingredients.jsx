@@ -1,11 +1,13 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import style from './burger-ingredients.module.css';
+import {SET_CURRENT_INGREDIENT} from '../../services/actions/index';
 
 const getCaption = (type)=>{
     switch(type) {
@@ -19,43 +21,75 @@ const getCaption = (type)=>{
 }
 
 export default function BurgerIngredients(props) {
-    const [state, setState] = useState({
-        visible: false
+    const [current, setCurrent] = useState('bun');
+
+    const ingredients = useSelector((state)=>{
+        return state.ingredients.buns.concat(state.ingredients.items);
+    });
+    const burgerConstructorIngredients = useSelector((state)=>{
+        const ingredientsWithBuns = [...state.burgerConstructorIngredients.items, ...state.burgerConstructorIngredients.buns]
+        return ingredientsWithBuns.reduce((acc, item)=>{
+            if (acc[item._id])
+            {
+                acc[item._id]++;
+            }
+            else
+            {
+                acc[item._id] = 1;
+            }
+            return acc;
+        }, {});
+    });
+
+
+    const currentIngredient = useSelector((state)=>{
+        return state.ingredients.current;
+    });
+    const [state] = useState({
+        visible: currentIngredient ? true: false
     })
 
-    const [detailedIngredient, setDetailedIngredient] = useState({});
-
+    const dispatch = useDispatch();
 
     const handleOpenModal = useCallback((ingredient)=>{
-        setState({
-            visible:true
+        dispatch({
+            type: SET_CURRENT_INGREDIENT,
+            id: ingredient._id
         });
-        setDetailedIngredient({
-            ...ingredient
-        });
-    }, [])
+    }, [dispatch]);
 
     const handleCloseModal = useCallback((e)=>{
-        setState({
-            visible:false
+        dispatch({
+            type: SET_CURRENT_INGREDIENT
         });
-        setDetailedIngredient({});
-    },[])
-
+    },[]);
 
     const groupedIngredients = useMemo(()=>{
-        return props.ingredients.reduce((acc, current)=>{
-                if(acc[current.type])
-                {
-                    acc[current.type].push(current);
-                }
-                else
-                {
-                    acc[current.type] = [current];
-                }
-                return acc;
-        }, []);
-    }, [props.ingredients]);
+        const groupedIngredients = ingredients.reduce((acc, current)=>{
+            acc[current.type].push(current);
+            return acc;
+        }, {'bun': [], 'sauce': [], 'main': []});
+        return groupedIngredients;
+    }, [ingredients]);
+
+    const handleScroll = useCallback((e)=>{
+        const scrollTop = e.target.scrollTop;
+        const range = {minHeight: 0, maxHeight: refBun.current.clientHeight};
+        Object.keys(groupedIngredients).every((type=>{
+            if(range.minHeight <= scrollTop && range.maxHeight >= scrollTop)
+            {
+                setCurrent(type);
+                return false;
+            }
+            else
+            {
+                const currentRef = getRef(type);
+                range.minHeight += currentRef.current.clientHeight;
+                range.maxHeight += currentRef.current.clientHeight;
+            }
+            return true;
+        }))
+    },[]);
 
     const refBun = useRef(null);
     const refMain = useRef(null);
@@ -72,7 +106,8 @@ export default function BurgerIngredients(props) {
         }
     }
 
-    const goToBlock = (ref)=>{
+    const goToBlock = (ref, type)=>{
+        setCurrent(type);
         ref.current?.scrollIntoView({behavior: 'smooth'});
     }
 
@@ -82,18 +117,17 @@ export default function BurgerIngredients(props) {
         <div>
             <h1 className='text text_type_main-large mb-5'>Соберите бургер</h1>
             <div className='tabs' style={{ display: 'flex' }}>
-                <Tab value="bun" onClick={()=>goToBlock(refBun)} >
+                <Tab value="bun" active={current === 'bun'} onClick={()=>goToBlock(refBun, 'bun')} >
                     Булки
                 </Tab>
-                <Tab value="sauce" onClick={()=>goToBlock(refSauce)}>
+                <Tab value="sauce" active={current === 'sauce'} onClick={()=>goToBlock(refSauce, 'sauce')}>
                     Соусы
                 </Tab>
-                <Tab value="main" onClick={()=>goToBlock(refMain)}>
+                <Tab value="main" active={current === 'main'} onClick={()=>goToBlock(refMain, 'main')}>
                     Начинки
                 </Tab>
             </div>
-            <div className={style.scroll_container}>
-
+            <div className={style.scroll_container} onScroll={handleScroll}>
                     {
                     Object.entries(groupedIngredients).map(([key, value])=>{
                         return (
@@ -104,7 +138,8 @@ export default function BurgerIngredients(props) {
                                     return(
                                     <div style={{flex:1}} key={x._id}>
                                         <BurgerIngredient
-                                            count={i == 0 ? 1 : 0}
+                                            id = {x._id}
+                                            count={burgerConstructorIngredients[x._id] ?? 0}
                                             handleOpenModal={()=>handleOpenModal(x)}
                                             description="20"
                                             imgSrc={x.image}
@@ -119,8 +154,8 @@ export default function BurgerIngredients(props) {
                 }
             </div>
             {
-                state.visible && detailedIngredient && <Modal onClose={handleCloseModal} header="Детали ингредиента">
-                    <IngredientDetails ingredient = {detailedIngredient}/>
+                state.visible && currentIngredient && <Modal onClose={handleCloseModal} header="Детали ингредиента">
+                    <IngredientDetails ingredient = {currentIngredient}/>
                 </Modal>
             }
         </div>
