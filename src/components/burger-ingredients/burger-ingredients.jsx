@@ -7,7 +7,7 @@ import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import style from './burger-ingredients.module.css';
-import {SET_CURRENT_INGREDIENT} from '../../services/actions/index';
+import { setCurrentIngredient } from '../../services/action-creators/current-ingredient';
 
 const getCaption = (type)=>{
     switch(type) {
@@ -27,7 +27,12 @@ export default function BurgerIngredients(props) {
         return state.ingredients.buns.concat(state.ingredients.items);
     });
     const burgerConstructorIngredients = useSelector((state)=>{
-        const ingredientsWithBuns = [...state.burgerConstructorIngredients.items, ...state.burgerConstructorIngredients.buns]
+        const ingredientsWithBuns = [...state.burgerConstructorIngredients.items];
+        if(state.burgerConstructorIngredients.bun)
+        {
+            ingredientsWithBuns.push(state.burgerConstructorIngredients.bun);
+            ingredientsWithBuns.push(state.burgerConstructorIngredients.bun);
+        }
         return ingredientsWithBuns.reduce((acc, item)=>{
             if (acc[item._id])
             {
@@ -43,25 +48,19 @@ export default function BurgerIngredients(props) {
 
 
     const currentIngredient = useSelector((state)=>{
-        return state.ingredients.current;
+        return state.currentIngredient;
     });
-    const [state] = useState({
-        visible: currentIngredient ? true: false
-    })
+
 
     const dispatch = useDispatch();
 
     const handleOpenModal = useCallback((ingredient)=>{
-        dispatch({
-            type: SET_CURRENT_INGREDIENT,
-            id: ingredient._id
-        });
+        debugger
+        dispatch(setCurrentIngredient(ingredient));
     }, [dispatch]);
 
     const handleCloseModal = useCallback((e)=>{
-        dispatch({
-            type: SET_CURRENT_INGREDIENT
-        });
+        dispatch(setCurrentIngredient());
     },[]);
 
     const groupedIngredients = useMemo(()=>{
@@ -154,7 +153,7 @@ export default function BurgerIngredients(props) {
                 }
             </div>
             {
-                state.visible && currentIngredient && <Modal onClose={handleCloseModal} header="Детали ингредиента">
+                currentIngredient && <Modal onClose={handleCloseModal} header="Детали ингредиента">
                     <IngredientDetails ingredient = {currentIngredient}/>
                 </Modal>
             }

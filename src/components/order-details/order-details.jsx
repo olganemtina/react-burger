@@ -16,11 +16,17 @@ export default function OrderDetails() {
 					<div className='text text_type_main-default text_color_inactive'>Дождитесь готовности на орбитальной станции</div>
 				</div>
 			}
+			{/* Не понимаю, почему в модалке до того, как вернутся данные, отображатся надпись "Что-то пошло не так",
+			если order.orderRequestFailed = false?
+			*/}
 			{order.orderRequestFailed &&
 				<div>
-					Что-то пошло не так
+					{order.errorMessage}
 				</div>
 			}
+			{order.orderRequest && <div>
+				Заказ формируется
+			</div>}
 		</div>
 	)
 }

@@ -7,7 +7,7 @@ export default function AppHeader() {
         <header className='pt-10 pb-10'>
             <nav className='display_flex display_flex_space_between'>
                 <div>
-                    <AppNavItem text="Конструктор">
+                    <AppNavItem text="Конструктор" active>
                         <BurgerIcon type="primary" />
                     </AppNavItem>
                     <AppNavItem text="Лента заказов">

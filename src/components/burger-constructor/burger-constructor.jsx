@@ -1,21 +1,22 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
+import { useDrop } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from "uuid";
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
+import { addBurgerIngredientToConstructor, updateBurgerIngredientToConstructor, setOrderBurgerIngredients } from '../../services/action-creators/burger-constructor-ingredients';
+import { setOrder } from '../../services/actions/order';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
+import {setOrderFailed} from '../../services/action-creators/order';
 import style from './burger-constructor.module.css';
-import { useDrop } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
-import {ADD_BURGER_INGREDIENT_IN_CONSTRUCTOR, UPDATE_BURGER_BUN_IN_CONSTRUCTOR, SET_ORDER_BURGER_INGREDIENTS} from '../../services/actions/index';
-import { v4 as uuidv4 } from "uuid";
-import { setOrder } from '../../services/actions/index'
 
 
 export default function BurgerConstructor(props) {
 	const [bunTop, bunBottom] = useSelector((state)=>{
-		return state.burgerConstructorIngredients.buns;
+		return [state.burgerConstructorIngredients.bun, state.burgerConstructorIngredients.bun];
 	})
 
 	const buns = useSelector((state)=>{
@@ -32,9 +33,8 @@ export default function BurgerConstructor(props) {
 
 	const dispatch = useDispatch();
 
-	const [state, setState] = useState({
-        visible: false
-    });
+	const [modalVisibility, setModalVisibility] = useState(false);
+
 
 	const [, dropTarget] = useDrop({
         accept: "ingredient",
@@ -42,35 +42,32 @@ export default function BurgerConstructor(props) {
 			const currentIngredient = ingredients.find(x=>x._id === item.id);
 			if(currentIngredient)
 			{
-				currentIngredient.key = uuidv4();
-				dispatch({
-					type: ADD_BURGER_INGREDIENT_IN_CONSTRUCTOR,
-					item: currentIngredient,
-				});
+				dispatch(addBurgerIngredientToConstructor(currentIngredient, uuidv4()));
 			}
 			const currentBun = buns.find(x=>x._id === item.id);
 			if(currentBun)
 			{
-				dispatch({
-					type: UPDATE_BURGER_BUN_IN_CONSTRUCTOR,
-					currentBun: currentBun
-				});
+				dispatch(updateBurgerIngredientToConstructor(currentBun));
 			}
         }
     });
 
 	const handleOpenModal = useCallback(()=>{
-		const ids = [...burgerIngredients.map(x=>x._id), bunTop._id, bunBottom._id];
-		dispatch(setOrder(ids));
-		setState({
-            visible:true
-        });
+		if(bunTop && bunBottom)
+		{
+			const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
+			dispatch(setOrder(ids));
+			setModalVisibility(true);
+		}
+		else
+		{
+			dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
+			setModalVisibility(true);
+		}
 	}, [burgerIngredients, bunTop, bunBottom]);
 
 	const handleCloseModal = useCallback(()=>{
-		setState({
-            visible:false
-        });
+		setModalVisibility(false);
 	}, []);
 
 	const totalPrice = useMemo(()=>{
@@ -86,11 +83,7 @@ export default function BurgerConstructor(props) {
 	}, [burgerIngredients, bunTop, bunBottom]);
 
 	const moveItemHandler = useCallback((dragIndex, dropIndex) => {
-		dispatch({
-			type: SET_ORDER_BURGER_INGREDIENTS,
-			dropIndex,
-			dragIndex
-		})
+		dispatch(setOrderBurgerIngredients(dropIndex, dragIndex))
 	  }, [])
 
 	return (
@@ -141,7 +134,7 @@ export default function BurgerConstructor(props) {
 				</Button>
 			</div>
 			{
-				state.visible &&
+				modalVisibility && 
 				<Modal header="" onClose={handleCloseModal} >
 					<OrderDetails />
 				</Modal>

@@ -2,16 +2,13 @@ import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burg
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
-import {REMOVE_BURGER_INGREDIENT_FROM_CONSTRUCTOR} from '../../services/actions/index';
 import { useRef } from 'react';
+import {removeBurgerIngredientFromConstructor} from '../../services/action-creators/burger-constructor-ingredients'
 
 export default function BurgerConstructorItem({name, price, item_key, image_mobile, type, draggable, index, moveItem}) {
 	const dispatch = useDispatch();
 	const removeItem = ()=>{
-		dispatch({
-			type: REMOVE_BURGER_INGREDIENT_FROM_CONSTRUCTOR,
-			key: item_key
-		})
+		dispatch(removeBurgerIngredientFromConstructor(item_key));
 	}
 
 	const ref = useRef(null)

@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
-import { getIngredients } from '../../services/actions';
+import { getIngredients } from '../../services/actions/burger-ingredients';
 import AppError from '../app-error/app-error';
+import AppLoad from '../app-load/app-load';
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
@@ -14,7 +15,7 @@ import { DndProvider } from 'react-dnd';
 const useAppDispatch: () => any = useDispatch
 
 function App() {
-  const {ingredientsRequestFailed, error} = useSelector((state: any)=>{
+  const {ingredientsRequestFailed, ingredientsRequest, error} = useSelector((state: any)=>{
     return state.ingredients
   });
 
@@ -26,7 +27,7 @@ function App() {
     return (
     <main className='display_flex'>
       <DndProvider backend={HTML5Backend}>
-        <div style={{ width: '50%' }}>
+        <div className='width_50_percent'>
           <BurgerIngredients />
         </div>
         <div className='mt-25 ml-10'>
@@ -45,7 +46,11 @@ function App() {
       <AppHeader/>
           {ingredientsRequestFailed
               ? <AppError error={error}/>
-              : <AppBody />
+              : (
+                ingredientsRequest
+                  ? <AppLoad text='Идет загрузка данных...'/> 
+                  : <AppBody />
+              )
             }
     </div>
   );
