@@ -3,6 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import ModalOverlay from '../modal-overlay/modal-overlay';
 import style from './modal.module.css';
+import PropTypes from 'prop-types';
 
 export default function Modal(props){
 
@@ -37,3 +38,9 @@ export default function Modal(props){
 		document.body
 	  );
 }
+
+Modal.propTypes = {
+    header: PropTypes.string,
+	children: PropTypes.element,
+	onClose: PropTypes.func.isRequired,
+};

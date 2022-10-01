@@ -1,4 +1,5 @@
 import style from './app-nav-item.module.css';
+import PropTypes from 'prop-types';
 
 export default function AppNavItem(props) {
 	return (
@@ -7,5 +8,11 @@ export default function AppNavItem(props) {
 			<span className={`${style.a_href_span} pl-2`}>{props.text}</span>
 		</a>
 	)
+}
+
+AppNavItem.propTypes = {
+	active: PropTypes.bool,
+	text: PropTypes.string.isRequired,
+	children: PropTypes.element.isRequired
 }
 

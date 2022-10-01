@@ -7,7 +7,6 @@ import {
 const initialIngredientsState = {
 	items: [],
 	buns: [],
-	current: null,
 	ingredientsRequest: false,
 	ingredientsRequestFailed: false,
 	error: "",

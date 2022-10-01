@@ -1,18 +1,17 @@
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import { getIngredients } from '../../services/actions/burger-ingredients';
 import AppError from '../app-error/app-error';
-import AppLoad from '../app-load/app-load';
 import AppHeader from '../app-header/app-header';
+import AppLoad from '../app-load/app-load';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import './App.css';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
+import './app.css';
+import {useAppDispatch} from '../../utils/helpers'
 
-const useAppDispatch: () => any = useDispatch
+
 
 function App() {
   const {ingredientsRequestFailed, ingredientsRequest, error} = useSelector((state: any)=>{

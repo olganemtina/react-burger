@@ -20,7 +20,7 @@ const getCaption = (type)=>{
     }
 }
 
-export default function BurgerIngredients(props) {
+export default function BurgerIngredients() {
     const [current, setCurrent] = useState('bun');
 
     const ingredients = useSelector((state)=>{
@@ -55,7 +55,6 @@ export default function BurgerIngredients(props) {
     const dispatch = useDispatch();
 
     const handleOpenModal = useCallback((ingredient)=>{
-        debugger
         dispatch(setCurrentIngredient(ingredient));
     }, [dispatch]);
 

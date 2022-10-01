@@ -5,16 +5,16 @@ import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from "uuid";
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
-import { addBurgerIngredientToConstructor, updateBurgerIngredientToConstructor, setOrderBurgerIngredients } from '../../services/action-creators/burger-constructor-ingredients';
+import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
+import { setOrderFailed } from '../../services/action-creators/order';
 import { setOrder } from '../../services/actions/order';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import {setOrderFailed} from '../../services/action-creators/order';
 import style from './burger-constructor.module.css';
 
 
-export default function BurgerConstructor(props) {
+export default function BurgerConstructor() {
 	const [bunTop, bunBottom] = useSelector((state)=>{
 		return [state.burgerConstructorIngredients.bun, state.burgerConstructorIngredients.bun];
 	})
