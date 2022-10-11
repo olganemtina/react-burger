@@ -1,74 +1,126 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
+import { useDrop } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from "uuid";
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
+import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
+import { setOrderFailed } from '../../services/action-creators/order';
+import { setOrder } from '../../services/actions/order';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import style from './burger-constructor.module.css';
 
-export default function BurgerConstructor(props) {
-	const [bun1, bun2] = useMemo(()=>{
-		return props.ingredients.filter(x=>x.type==='bun');
-	}, [props.ingredients]);
 
-	const ingredients = useMemo(()=>{
-		return props.ingredients.filter(x=>x.type!=='bun');
-	}, [props.ingredients]);
+export default function BurgerConstructor() {
+	const [bunTop, bunBottom] = useSelector((state)=>{
+		return [state.burgerConstructorIngredients.bun, state.burgerConstructorIngredients.bun];
+	})
 
-	const [state, setState] = useState({
-        visible: false
+	const buns = useSelector((state)=>{
+		return state.ingredients.buns;
+	})
+
+	const ingredients = useSelector((state)=>{
+		return state.ingredients.items;
+	})
+
+	const burgerIngredients = useSelector((state)=>{
+		return state.burgerConstructorIngredients.items;
+	});
+
+	const dispatch = useDispatch();
+
+	const [modalVisibility, setModalVisibility] = useState(false);
+
+
+	const [, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(item) {
+			const currentIngredient = ingredients.find(x=>x._id === item.id);
+			if(currentIngredient)
+			{
+				dispatch(addBurgerIngredientToConstructor(currentIngredient, uuidv4()));
+			}
+			const currentBun = buns.find(x=>x._id === item.id);
+			if(currentBun)
+			{
+				dispatch(updateBurgerIngredientToConstructor(currentBun));
+			}
+        }
     });
 
 	const handleOpenModal = useCallback(()=>{
-		setState({
-            visible:true
-        });
-	}, []);
+		if(bunTop && bunBottom)
+		{
+			const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
+			dispatch(setOrder(ids));
+			setModalVisibility(true);
+		}
+		else
+		{
+			dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
+			setModalVisibility(true);
+		}
+	}, [burgerIngredients, bunTop, bunBottom]);
 
 	const handleCloseModal = useCallback(()=>{
-		setState({
-            visible:false
-        });
+		setModalVisibility(false);
 	}, []);
 
 	const totalPrice = useMemo(()=>{
-		return props.ingredients.reduce((sum, current)=>{
+		let burgerBunsPrice = 0;
+		if(bunTop && bunBottom)
+		{
+			burgerBunsPrice = bunTop.price + bunBottom.price;
+		}
+		const burgerIngredientsPrice = burgerIngredients.reduce((sum, current)=>{
 			return sum + current.price;
-		}, 0)
-	}, [props.ingredients])
+		}, 0);
+		return burgerBunsPrice+burgerIngredientsPrice;
+	}, [burgerIngredients, bunTop, bunBottom]);
+
+	const moveItemHandler = useCallback((dragIndex, dropIndex) => {
+		dispatch(setOrderBurgerIngredients(dropIndex, dragIndex))
+	  }, [])
 
 	return (
-		<div>
+		<div ref={dropTarget}>
 			<div className={style.scroll_container}>
-				{bun1  &&
+				{bunTop  &&
 					<BurgerConstructorItem
-						key='bun1'
+						key='bunTop'
+						item_key='bunTop'
 						draggable={false}
-						name={bun1.name}
-						price={bun1.price}
+						name={bunTop.name}
+						price={bunTop.price}
 						type='top'
-						image_mobile={bun1.image_mobile}/>}
-				{ingredients.map((x)=>{
+						image_mobile={bunTop.image_mobile}/>}
+				{burgerIngredients.map((x, index)=>{
 						return (
 							<BurgerConstructorItem
-								key={x._id}
-								item_key={x._id}
+								key={x.key}
+								item_key={x.key}
 								draggable={true}
 								name={x.name}
 								price={x.price}
 								type=''
-								image_mobile={x.image_mobile}/>
+								index={index}
+								image_mobile={x.image_mobile}
+								moveItem={moveItemHandler}/>
 						)
 					})}
-				{bun2 &&
+				{bunBottom &&
 					<BurgerConstructorItem
-						key='bun2'
+						key='bunBottom'
+						item_key='bunBottom'
 						draggable={false}
-						name={bun2.name}
-						price={bun2.price}
+						name={bunBottom.name}
+						price={bunBottom.price}
 						type='bottom'
-						image_mobile={bun2.image_mobile}/>}
+						image_mobile={bunBottom.image_mobile}/>}
 			</div>
 			<div className='mt-10 text-align-right total_price_container'>
 				<span className='inline-flex mr-10 text text_type_digits-medium'>
@@ -82,7 +134,7 @@ export default function BurgerConstructor(props) {
 				</Button>
 			</div>
 			{
-				state.visible &&
+				modalVisibility && 
 				<Modal header="" onClose={handleCloseModal} >
 					<OrderDetails />
 				</Modal>

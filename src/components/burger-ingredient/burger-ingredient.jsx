@@ -1,9 +1,15 @@
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
+import { useDrag } from 'react-dnd';
 
 export default function BurgerIngredient(props) {
+	const [, dragRef] = useDrag({
+        type: "ingredient",
+        item: { id: props.id }
+    });
+
 	return (
-		<div className='mb-8 position_relative' onClick={props.handleOpenModal}>
+		<div draggable ref={dragRef} className='mb-8 position_relative' onClick={props.handleOpenModal}>
 			{props.count > 0 && <Counter count={props.count} size="default" />}
 			<div className='text_align_center pl-4 pr-4'>
 				<img src={props.imgSrc} alt="" />
@@ -25,6 +31,7 @@ export default function BurgerIngredient(props) {
 
 BurgerIngredient.propTypes = {
 	count: PropTypes.number,
+	id: PropTypes.string.isRequired,
 	caption:  PropTypes.string.isRequired,
 	description:  PropTypes.string,
 	imgSrc: PropTypes.string,

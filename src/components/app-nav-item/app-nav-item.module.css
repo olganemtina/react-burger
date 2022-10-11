@@ -1,0 +1,13 @@
+.a_href_span{
+	vertical-align: top;
+}
+
+.a_href{
+	text-decoration: none;
+	color: #8585AD;
+}
+
+.active{
+	color: #F2F2F3;
+}
+
