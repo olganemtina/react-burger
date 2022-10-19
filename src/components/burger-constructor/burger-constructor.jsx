@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from "uuid";
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
 import { setOrderFailed } from '../../services/action-creators/order';
 import { setOrder } from '../../services/actions/order';
+import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
@@ -35,6 +37,8 @@ export default function BurgerConstructor() {
 
 	const [modalVisibility, setModalVisibility] = useState(false);
 
+	const auth = useProvideAuth();
+	const history = useHistory();
 
 	const [, dropTarget] = useDrop({
         accept: "ingredient",
@@ -52,17 +56,25 @@ export default function BurgerConstructor() {
         }
     });
 
-	const handleOpenModal = useCallback(()=>{
-		if(bunTop && bunBottom)
+	const handleOpenModal = useCallback(async()=>{
+		const user = auth.user ?? await auth.getUser();
+		if(user)
 		{
-			const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
-			dispatch(setOrder(ids));
-			setModalVisibility(true);
+			if(bunTop && bunBottom)
+			{
+				const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
+				dispatch(setOrder(ids));
+				setModalVisibility(true);
+			}
+			else
+			{
+				dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
+				setModalVisibility(true);
+			}
 		}
 		else
 		{
-			dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
-			setModalVisibility(true);
+			history.replace({pathname: "/login"});
 		}
 	}, [burgerIngredients, bunTop, bunBottom]);
 

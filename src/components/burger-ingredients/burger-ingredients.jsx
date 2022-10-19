@@ -2,12 +2,10 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
-import IngredientDetails from '../ingredient-details/ingredient-details';
-import Modal from '../modal/modal';
 import style from './burger-ingredients.module.css';
-import { setCurrentIngredient } from '../../services/action-creators/current-ingredient';
 
 const getCaption = (type)=>{
     switch(type) {
@@ -23,9 +21,14 @@ const getCaption = (type)=>{
 export default function BurgerIngredients() {
     const [current, setCurrent] = useState('bun');
 
-    const ingredients = useSelector((state)=>{
-        return state.ingredients.buns.concat(state.ingredients.items);
+    const buns = useSelector((state)=>{
+        return state.ingredients.buns;
     });
+    const items = useSelector((state)=>{
+        return state.ingredients.items;
+    });
+
+
     const burgerConstructorIngredients = useSelector((state)=>{
         const ingredientsWithBuns = [...state.burgerConstructorIngredients.items];
         if(state.burgerConstructorIngredients.bun)
@@ -46,29 +49,20 @@ export default function BurgerIngredients() {
         }, {});
     });
 
-
-    const currentIngredient = useSelector((state)=>{
-        return state.currentIngredient;
-    });
-
-
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleOpenModal = useCallback((ingredient)=>{
-        dispatch(setCurrentIngredient(ingredient));
+        history.push({ pathname: `/ingredients/${ingredient._id}`, state: {isModal: true} });
     }, [dispatch]);
 
-    const handleCloseModal = useCallback((e)=>{
-        dispatch(setCurrentIngredient());
-    },[]);
-
     const groupedIngredients = useMemo(()=>{
-        const groupedIngredients = ingredients.reduce((acc, current)=>{
+        const groupedIngredients = [...buns, ...items].reduce((acc, current)=>{
             acc[current.type].push(current);
             return acc;
         }, {'bun': [], 'sauce': [], 'main': []});
         return groupedIngredients;
-    }, [ingredients]);
+    }, [buns, items]);
 
     const handleScroll = useCallback((e)=>{
         const scrollTop = e.target.scrollTop;
@@ -151,11 +145,6 @@ export default function BurgerIngredients() {
                     })
                 }
             </div>
-            {
-                currentIngredient && <Modal onClose={handleCloseModal} header="Детали ингредиента">
-                    <IngredientDetails ingredient = {currentIngredient}/>
-                </Modal>
-            }
         </div>
     )
 }

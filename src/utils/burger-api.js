@@ -1,3 +1,5 @@
+import { checkReponseAndGetData } from "./helpers";
+
 const getIngredientsUrl = "https://norma.nomoreparties.space/api/ingredients";
 const setOrderUrl = "https://norma.nomoreparties.space/api/orders";
 
@@ -20,10 +22,4 @@ export const setOrderData = (ids) => {
 		.then((data) => {
 			return data;
 		});
-};
-
-const checkReponseAndGetData = (response) => {
-	return response.ok
-		? response.json()
-		: response.json().then((err) => Promise.reject(err));
 };
