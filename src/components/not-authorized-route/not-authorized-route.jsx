@@ -1,27 +1,29 @@
-import { useEffect, useState } from 'react';
-import { Redirect, Route } from 'react-router';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route } from 'react-router';
+import { getUser } from '../../services/actions/user';
 
 export function RouteForUnauthorizedUsers({ children, ...rest }) {
-	let auth = useProvideAuth();
-	const [isUserLoaded, setUserLoaded] = useState(auth.user!==null);
+	const dispatch = useDispatch();
+	const user = useSelector((state)=>{
+		return state.user;
+	})
 
 	useEffect(async() => {
-		if(!isUserLoaded)
+		if(!user.loaded)
 		{
-			await auth.getUser();
-	  		setUserLoaded(true);
+			dispatch(getUser());
 		}
 	}, []);
 
-	if(isUserLoaded)
+	if(user.loaded)
 	{
 		return (
 			<Route
 			  {...rest}
 			  render={({ location }) =>
-				auth.user ? (
+				user.data ? (
 					<Redirect
 					to={{
 					  pathname: '/',

@@ -58,13 +58,11 @@ export const updateAccessTokenRequest = async () => {
 };
 
 export const getUserRequest = async () => {
-	//ecть какой-нибудь способ написать этот код более симпатично?=)
 	return await requestGet(getUserUrl, {
 		"Content-Type": "application/json",
 		Authorization: getCookie("accessToken"),
 	}).then(async (result) => {
 		if (!result.success && result.message === "jwt expired") {
-			debugger;
 			await updateAccessTokenRequest();
 			requestGet(getUserUrl, {
 				"Content-Type": "application/json",
@@ -89,7 +87,6 @@ export const updateUserRequest = async (formData) => {
 		formData
 	).then(async (result) => {
 		if (!result.success && result.message === "jwt expired") {
-			debugger;
 			updateAccessTokenRequest();
 			requestGet(getUserUrl, {
 				"Content-Type": "application/json",

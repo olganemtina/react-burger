@@ -1,6 +1,6 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -9,11 +9,11 @@ import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
 import { setOrderFailed } from '../../services/action-creators/order';
 import { setOrder } from '../../services/actions/order';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
 import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import style from './burger-constructor.module.css';
+import { getUser } from '../../services/actions/user';
 
 
 export default function BurgerConstructor() {
@@ -33,11 +33,22 @@ export default function BurgerConstructor() {
 		return state.burgerConstructorIngredients.items;
 	});
 
+	const user = useSelector((state)=>{
+		return state.user;
+	});
+
+	useEffect(async() => {
+		if(!user.loaded)
+		{
+			dispatch(getUser());
+		}
+	}, [user.loaded]);
+
 	const dispatch = useDispatch();
 
 	const [modalVisibility, setModalVisibility] = useState(false);
 
-	const auth = useProvideAuth();
+
 	const history = useHistory();
 
 	const [, dropTarget] = useDrop({
@@ -57,8 +68,7 @@ export default function BurgerConstructor() {
     });
 
 	const handleOpenModal = useCallback(async()=>{
-		const user = auth.user ?? await auth.getUser();
-		if(user)
+		if(user.loaded && user.data)
 		{
 			if(bunTop && bunBottom)
 			{
@@ -76,7 +86,7 @@ export default function BurgerConstructor() {
 		{
 			history.replace({pathname: "/login"});
 		}
-	}, [burgerIngredients, bunTop, bunBottom]);
+	}, [burgerIngredients, bunTop, bunBottom, user]);
 
 	const handleCloseModal = useCallback(()=>{
 		setModalVisibility(false);

@@ -1,10 +1,14 @@
-import { Input, Button, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, Redirect } from 'react-router-dom';
+import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, Redirect } from 'react-router-dom';
+import { signUp } from '../../services/actions/user';
+import AppError from '../../components/app-error/app-error'
 
 export default function RegisterPage() {
-	let auth = useProvideAuth();
+	const dispatch = useDispatch();
+
+	const [formSended, setFormSended] = useState(false);
 
 	const [formData, setFormData] = useState({
 		name: "",
@@ -12,9 +16,14 @@ export default function RegisterPage() {
 		password: ""
 	});
 
+	const user = useSelector((state)=>{
+		return state.user;
+	})
+
 	const registerClickHandler = useCallback((e)=>{
 		e.preventDefault();
-		auth.signUp(formData);
+		dispatch(signUp(formData));
+		setFormSended(true);
 	}, [formData]);
 
 	const setValue = (e) =>{
@@ -25,7 +34,7 @@ export default function RegisterPage() {
 		})
 	}
 
-	if(auth.user)
+	if(!user.loaded)
 	{
 		return(
 			<Redirect to="/" />
@@ -36,6 +45,7 @@ export default function RegisterPage() {
 		<div className={`display_flex display_flex-center text_align_center vh-100`}>
 			<form onSubmit={(e)=>registerClickHandler(e)}>
 				<h1 className="text text_type_main-medium">Регистрация</h1>
+				{formSended && user.error && <AppError error={user.error}/>}
 				<div className='mt-6'>
 					<Input
 						type={'text'}
@@ -60,7 +70,7 @@ export default function RegisterPage() {
 					<PasswordInput onChange={e => setValue(e)} value={formData.password} name={'password'} />
 				</div>
 				<div className='mt-6'>
-					<Button type="primary" size="medium">
+					<Button htmlType="submit" type="primary" size="medium">
 						Зарегистрироваться
 					</Button>
 				</div>

@@ -1,7 +1,9 @@
-import { Input, Button, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, Redirect, useHistory } from 'react-router-dom';
+import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
+import { useDispatch } from 'react-redux';
+import { NavLink, Redirect, useHistory } from 'react-router-dom';
+import { passwordResetStep2Request } from '../../utils/auth-api';
+import AppError from '../../components/app-error/app-error';
 
 export default function ResetPasswordPage() {
 	const [formData, setFormData] = useState({
@@ -10,8 +12,8 @@ export default function ResetPasswordPage() {
 	});
 	const [errorMsg, setErrorMsg] = useState("");
 
-	const auth = useProvideAuth();
 	const history = useHistory();
+	const dispatch = useDispatch();
 
 	const setValue = (target) => {
 		const {name, value} = target;
@@ -23,7 +25,7 @@ export default function ResetPasswordPage() {
 
 	const restoreHandler = useCallback(async(e)=>{
 		e.preventDefault();
-		const result = await auth.passwordResetStep2(formData);
+		const result = await passwordResetStep2Request(formData);
 		if(result.success)
 		{
 			history.replace({pathname: "/login"});
@@ -40,6 +42,7 @@ export default function ResetPasswordPage() {
 			<div className={`display_flex display_flex-center text_align_center vh-100`}>
 				<form onSubmit={(e)=>restoreHandler(e)}>
 					<h1 className="text text_type_main-medium">Восстановление пароля</h1>
+					{errorMsg && <AppError error={errorMsg}/>}
 					<div className='mt-6'>
 						<PasswordInput onChange={e => setValue(e.target)} value={formData.password} name={'password'} />
 					</div>
@@ -49,14 +52,13 @@ export default function ResetPasswordPage() {
 							placeholder={'Введите код из письма'}
 							onChange={e => setValue(e.target)}
 							value={formData.token}
-							name={'token'}
 							error={false}
-							errorText={'Ошибка'}
+							name={'token'}
 							size={'default'}
 							/>
 					</div>
 					<div className='mt-6'>
-						<Button type="primary" size="medium">
+						<Button htmlType="submit" type="primary" size="medium">
 							Сохранить
 						</Button>
 					</div>
@@ -69,7 +71,6 @@ export default function ResetPasswordPage() {
 						</span>
 					</div>
 				</form>
-				<div>{errorMsg}</div>
 			</div>
 		)
 	}

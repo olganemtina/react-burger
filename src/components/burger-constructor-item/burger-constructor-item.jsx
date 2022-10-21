@@ -58,6 +58,6 @@ BurgerConstructorItem.propTypes = {
 	image_mobile: PropTypes.string.isRequired,
 	type: PropTypes.string,
 	draggable: PropTypes.bool,
-	index: PropTypes.number.isRequired,
-	moveItem: PropTypes.func.isRequired
+	index: PropTypes.number,
+	moveItem: PropTypes.func
 };

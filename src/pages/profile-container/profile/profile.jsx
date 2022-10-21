@@ -1,10 +1,15 @@
 import { Input, EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useProvideAuth } from '../../../services/custom-hooks/use-provide-auth';
+import { updateUser } from '../../../services/actions/user'
+
 
 export default function ProfilePage(){
-	const auth = useProvideAuth();
+	const user = useSelector((state)=>{
+		return state.user;
+	});
+
+	const dispatch = useDispatch();
 
 	const [inputsDisabled, setInputDisabled] = useState({
 		name: true,
@@ -21,9 +26,8 @@ export default function ProfilePage(){
 	const [formData, setFormData] = useState({name: "", email: "", password: ""});
 
 	useEffect(()=>{
-
-		setFormData({...auth.user, password: ""});
-	}, [auth.user]);
+		setFormData({...user.data, password: ""});
+	}, [user.data]);
 
 
 	const setValue = (target) =>{
@@ -60,12 +64,12 @@ export default function ProfilePage(){
 	}, [inputsDisabled]);
 
 	const saveHandler = useCallback(async()=>{
-		await auth.updateUser(formData);
-
+		dispatch(updateUser(formData));
+		setFormChanged(false);
 	}, [formData]);
 
 	const cancelHandler = useCallback(()=>{
-		setFormData({...auth.user, password: ""});
+		setFormData({...user.data, password: ""});
 		setFormChanged(false);
 	}, []);
 
@@ -123,7 +127,7 @@ export default function ProfilePage(){
 				{
 					formChanged &&
 					<div>
-						<Button className="mr-5" type="primary" size="medium" onClick={saveHandler}>
+						<Button htmlType="submit" className="mr-5" type="primary" size="medium" onClick={saveHandler}>
 							Сохранить
 						</Button>
 						<Button onClick={cancelHandler} type="secondary" size="medium">Отмена</Button>

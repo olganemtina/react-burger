@@ -2,16 +2,18 @@ import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import AppNavItem from '../../components/app-nav-item/app-nav-item';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
 import style from './profile-container.module.css';
+import { signOut } from '../../services/actions/user';
+import { useDispatch } from 'react-redux';
 
 export default function ProfileContainerPage({children}) {
-	const auth = useProvideAuth();
 	const history = useHistory();
+	const dispatch = useDispatch();
+
 	const logoutHandler = useCallback(async()=>{
-		await auth.signOut();
+		dispatch(signOut());
 		history.replace({ pathname: '/login' });
-	}, [auth]);
+	}, []);
 	return(
 		<div className='display_flex'>
 			<div className={style.width_30_percent} >

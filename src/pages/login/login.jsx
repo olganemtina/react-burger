@@ -1,15 +1,23 @@
-import { Input, Button, PasswordInput} from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
-import { useProvideAuth } from '../../services/custom-hooks/use-provide-auth';
+import { signIn } from '../../services/actions/user';
+import AppError from '../../components/app-error/app-error'
 
 export default function LoginPage() {
-	let auth = useProvideAuth();
+	const dispatch = useDispatch();
+
+	const user = useSelector((state)=>{
+		return state.user;
+	})
 
 	const [formData, setFormData] = useState({
 		email: "",
 		password: ""
 	});
+
+	const [formSended, setFormSended] = useState(false);
 
 	const setValue = (evt)=>{
 		const {name, value} = evt.target;
@@ -19,12 +27,13 @@ export default function LoginPage() {
 		})
 	};
 
-	const login = useCallback((e)=>{
+	const login = useCallback(async(e)=>{
 		e.preventDefault();
-		auth.signIn(formData);
+		dispatch(signIn(formData));
+		setFormSended(true);
 	}, [formData]);
 
-	if(auth.user)
+	if(!user.loaded)
 	{
 		return(
 			<Redirect to="/" />
@@ -35,6 +44,7 @@ export default function LoginPage() {
 		<div className={`display_flex display_flex-center text_align_center vh-100`}>
 			<form onSubmit={(e)=>login(e)}>
 				<h1 className="text text_type_main-medium">Вход</h1>
+				{formSended && user.error && <AppError error={user.error}/>}
 				<div className='mt-6'>
 					<Input
 						type={'text'}
@@ -43,9 +53,7 @@ export default function LoginPage() {
 						value={formData.email}
 						name={'email'}
 						error={false}
-						//ref={inputRef}
-						//onIconClick={onIconClick}
-						errorText={'Ошибка'}
+						errorText={'E-mail invalid'}
 						size={'default'}
 						/>
 				</div>
@@ -53,7 +61,7 @@ export default function LoginPage() {
 					<PasswordInput onChange={e => setValue(e)} value={formData.password} name={'password'} />
 				</div>
 				<div className='mt-6'>
-					<Button type="primary" size="medium">
+					<Button htmlType="submit" type="primary" size="medium">
 						Войти
 					</Button>
 				</div>
