@@ -7,17 +7,23 @@ export default function AppHeader() {
         <header className='pt-10 pb-10'>
             <nav className='display_flex display_flex_space_between'>
                 <div>
-                    <AppNavItem text="Конструктор" active>
-                        <BurgerIcon type="primary" />
+                    <AppNavItem className="p-5 mr-2 text text_type_main-default" path="/" text="Конструктор">
+                        <span className='mr-2'>
+                            <BurgerIcon type="primary" />
+                        </span>
                     </AppNavItem>
-                    <AppNavItem text="Лента заказов">
-                        <ListIcon type="primary" />
+                    <AppNavItem className="p-5 mr-2 text text_type_main-default" path="/profile/orders" text="Лента заказов">
+                        <span className='mr-2'>
+                            <ListIcon type="primary" />
+                        </span>
                     </AppNavItem>
                 </div>
                 <Logo />
                 <div>
-                    <AppNavItem text="Личный кабинет">
-                        <ProfileIcon type="primary" />
+                    <AppNavItem className="p-5 mr-2 text text_type_main-default" path="/profile" text="Личный кабинет">
+                        <span className='mr-2'>
+                            <ProfileIcon type="primary" />
+                        </span>
                     </AppNavItem>
                 </div>
             </nav>

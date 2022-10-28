@@ -85,3 +85,24 @@ code {
   font-weight: 700;
   src: url("../node_modules/@ya.praktikum/react-developer-burger-ui-components/dist/ui/fonts/iceland.woff") format("woff");
 }
+
+.input__container{
+	width: 480px !important;
+}
+
+.input_size_default{
+  width: 100% !important;
+}
+
+.nav_link{
+  color: #4C4CFF !important;
+  text-decoration: none;
+}
+
+.text_decoration_none{
+  text-decoration: none;
+}
+
+.vh-100{
+  height: 100vh;
+}

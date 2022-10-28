@@ -1,8 +1,9 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from "uuid";
 import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
 import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
@@ -12,6 +13,7 @@ import BurgerConstructorItem from '../burger-constructor-item/burger-constructor
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import style from './burger-constructor.module.css';
+import { getUser } from '../../services/actions/user';
 
 
 export default function BurgerConstructor() {
@@ -31,10 +33,23 @@ export default function BurgerConstructor() {
 		return state.burgerConstructorIngredients.items;
 	});
 
+	const user = useSelector((state)=>{
+		return state.user;
+	});
+
+	useEffect(async() => {
+		if(!user.loaded)
+		{
+			dispatch(getUser());
+		}
+	}, [user.loaded]);
+
 	const dispatch = useDispatch();
 
 	const [modalVisibility, setModalVisibility] = useState(false);
 
+
+	const history = useHistory();
 
 	const [, dropTarget] = useDrop({
         accept: "ingredient",
@@ -52,19 +67,26 @@ export default function BurgerConstructor() {
         }
     });
 
-	const handleOpenModal = useCallback(()=>{
-		if(bunTop && bunBottom)
+	const handleOpenModal = useCallback(async()=>{
+		if(user.loaded && user.data)
 		{
-			const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
-			dispatch(setOrder(ids));
-			setModalVisibility(true);
+			if(bunTop && bunBottom)
+			{
+				const ids = [bunTop._id, ...burgerIngredients.map(x=>x._id), bunBottom._id];
+				dispatch(setOrder(ids));
+				setModalVisibility(true);
+			}
+			else
+			{
+				dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
+				setModalVisibility(true);
+			}
 		}
 		else
 		{
-			dispatch(setOrderFailed("Пожалуйста, добавьте булки в бургер"));
-			setModalVisibility(true);
+			history.replace({pathname: "/login"});
 		}
-	}, [burgerIngredients, bunTop, bunBottom]);
+	}, [burgerIngredients, bunTop, bunBottom, user]);
 
 	const handleCloseModal = useCallback(()=>{
 		setModalVisibility(false);
