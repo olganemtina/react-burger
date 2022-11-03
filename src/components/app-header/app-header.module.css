@@ -9,3 +9,7 @@ a{
 	color: #8585AD;
 	text-decoration: none;
 }
+
+.active{
+	color: #F2F2F3;
+}

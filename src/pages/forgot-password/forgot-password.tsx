@@ -1,15 +1,15 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
-import AppError from '../../components/app-error/app-error';
+import {AppError} from '../../components/app-error/app-error';
 import { NavLink, useHistory } from 'react-router-dom';
 import { passwordResetStep1Request } from '../../utils/auth-api';
 
-export default function ForgotPasswordPage() {
+export const ForgotPasswordPage = () => {
 	const history = useHistory();
-	const [email, setEmail] = useState("");
-	const [errorMsg, setErrorMsg] = useState(null);
+	const [email, setEmail] = useState<string>("");
+	const [errorMsg, setErrorMsg] = useState<string>();
 
-	const restoreHandler = useCallback(async(e)=>{
+	const restoreHandler = useCallback(async(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault();
 		const result = await passwordResetStep1Request({
 			"email": email

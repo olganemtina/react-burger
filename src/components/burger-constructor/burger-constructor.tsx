@@ -1,43 +1,42 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from "uuid";
-import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
+import { IIngredientDetails } from '../../models/ingredient';
 import { addBurgerIngredientToConstructor, setOrderBurgerIngredients, updateBurgerIngredientToConstructor } from '../../services/action-creators/burger-constructor-ingredients';
 import { setOrderFailed } from '../../services/action-creators/order';
 import { setOrder } from '../../services/actions/order';
-import BurgerConstructorItem from '../burger-constructor-item/burger-constructor-item';
-import Modal from '../modal/modal';
-import OrderDetails from '../order-details/order-details';
-import style from './burger-constructor.module.css';
 import { getUser } from '../../services/actions/user';
+import { BurgerConstructorItem } from '../burger-constructor-item/burger-constructor-item';
+import { Modal } from '../modal/modal';
+import { OrderDetails } from '../order-details/order-details';
+import style from './burger-constructor.module.css';
 
 
-export default function BurgerConstructor() {
-	const [bunTop, bunBottom] = useSelector((state)=>{
+export const BurgerConstructor = () => {
+	const [bunTop, bunBottom] = useSelector((state: any)=>{
 		return [state.burgerConstructorIngredients.bun, state.burgerConstructorIngredients.bun];
 	})
 
-	const buns = useSelector((state)=>{
+	const buns: Array<IIngredientDetails> = useSelector((state: any)=>{
 		return state.ingredients.buns;
 	})
 
-	const ingredients = useSelector((state)=>{
+	const ingredients: Array<IIngredientDetails>= useSelector((state: any)=>{
 		return state.ingredients.items;
 	})
 
-	const burgerIngredients = useSelector((state)=>{
+	const burgerIngredients: Array<IIngredientDetails & {key: string}>= useSelector((state: any)=>{
 		return state.burgerConstructorIngredients.items;
 	});
 
-	const user = useSelector((state)=>{
+	const user = useSelector((state: any)=>{
 		return state.user;
 	});
 
-	useEffect(async() => {
+	useEffect(() => {
 		if(!user.loaded)
 		{
 			dispatch(getUser());
@@ -53,7 +52,7 @@ export default function BurgerConstructor() {
 
 	const [, dropTarget] = useDrop({
         accept: "ingredient",
-        drop(item) {
+        drop(item: {id: string}) {
 			const currentIngredient = ingredients.find(x=>x._id === item.id);
 			if(currentIngredient)
 			{
@@ -104,7 +103,7 @@ export default function BurgerConstructor() {
 		return burgerBunsPrice+burgerIngredientsPrice;
 	}, [burgerIngredients, bunTop, bunBottom]);
 
-	const moveItemHandler = useCallback((dragIndex, dropIndex) => {
+	const moveItemHandler = useCallback((dragIndex: number, dropIndex: number) => {
 		dispatch(setOrderBurgerIngredients(dropIndex, dragIndex))
 	  }, [])
 
@@ -120,7 +119,7 @@ export default function BurgerConstructor() {
 						price={bunTop.price}
 						type='top'
 						image_mobile={bunTop.image_mobile}/>}
-				{burgerIngredients.map((x, index)=>{
+				{burgerIngredients.map((x, index: number)=>{
 						return (
 							<BurgerConstructorItem
 								key={x.key}
@@ -128,14 +127,13 @@ export default function BurgerConstructor() {
 								draggable={true}
 								name={x.name}
 								price={x.price}
-								type=''
 								index={index}
 								image_mobile={x.image_mobile}
 								moveItem={moveItemHandler}/>
 						)
 					})}
 				{bunBottom &&
-					<BurgerConstructorItem
+					<BurgerConstructorItem 
 						key='bunBottom'
 						item_key='bunBottom'
 						draggable={false}
@@ -151,7 +149,7 @@ export default function BurgerConstructor() {
 						<CurrencyIcon type="primary" />
 					</span>
 				</span>
-				<Button onClick={handleOpenModal} type="primary" size="large">
+				<Button htmlType='button' onClick={handleOpenModal} type="primary" size="large">
 					Оформить заказ
 				</Button>
 			</div>
@@ -164,8 +162,4 @@ export default function BurgerConstructor() {
 	</div>
 	)
 }
-
-BurgerConstructor.propTypes = {
-    ingredients: PropTypes.arrayOf(ingredientPropTypes),
-};
 

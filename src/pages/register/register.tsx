@@ -1,33 +1,35 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
+import { AppError } from '../../components/app-error/app-error';
+import { IRegisterFormData } from '../../models/auth';
 import { signUp } from '../../services/actions/user';
-import AppError from '../../components/app-error/app-error'
 
-export default function RegisterPage() {
+export const RegisterPage = () => {
 	const dispatch = useDispatch();
 
 	const [formSended, setFormSended] = useState(false);
 
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<IRegisterFormData>({
 		name: "",
 		email: "",
 		password: ""
 	});
 
 	const user = useSelector((state)=>{
+		//@ts-ignore
 		return state.user;
 	})
 
-	const registerClickHandler = useCallback((e)=>{
+	const registerClickHandler = useCallback((e: SyntheticEvent<HTMLFormElement>)=>{
 		e.preventDefault();
 		dispatch(signUp(formData));
 		setFormSended(true);
 	}, [formData]);
 
-	const setValue = (e) =>{
-		const {name, value} = e.target;
+	const setValue = (e: SyntheticEvent<HTMLInputElement>) =>{
+		const {name, value} = e.target as HTMLInputElement;
 		setFormData({
 			...formData,
 			[name]: value

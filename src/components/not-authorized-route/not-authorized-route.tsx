@@ -1,16 +1,17 @@
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router';
+import { IRouterParams, TRouteForUnauthorizedUsers } from '../../models/routing';
 import { getUser } from '../../services/actions/user';
 
-export function RouteForUnauthorizedUsers({ children, ...rest }) {
+export const RouteForUnauthorizedUsers: FC<TRouteForUnauthorizedUsers<IRouterParams>> = ({ children, ...rest })=> {
 	const dispatch = useDispatch();
 	const user = useSelector((state)=>{
+		// @ts-ignore
 		return state.user;
 	})
 
-	useEffect(async() => {
+	useEffect(() => {
 		if(!user.loaded)
 		{
 			dispatch(getUser());
@@ -41,8 +42,3 @@ export function RouteForUnauthorizedUsers({ children, ...rest }) {
 		return null;
 	}
   }
-
-RouteForUnauthorizedUsers.propTypes = {
-	children: PropTypes.node.isRequired,
-	...{ path: PropTypes.string.isRequired, exact: PropTypes.bool }
-};

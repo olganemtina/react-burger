@@ -6,11 +6,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { getIngredients } from '../../services/actions/burger-ingredients';
 import { useAppDispatch } from '../../utils/helpers';
 import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfileContainerPage, IngredientPage, ProfileOrdersPage, ProfilePage } from '../../pages';
-import AppError from '../app-error/app-error';
+import {AppError} from '../app-error/app-error';
 import AppHeader from '../app-header/app-header';
-import AppLoad from '../app-load/app-load';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import {AppLoad} from '../app-load/app-load';
+import {BurgerConstructor} from '../burger-constructor/burger-constructor';
+import {BurgerIngredients} from '../burger-ingredients/burger-ingredients';
 import {ProtectedRoute} from '../protected-route/protected-route';
 import {RouteForUnauthorizedUsers} from '../not-authorized-route/not-authorized-route'
 import './app.css';

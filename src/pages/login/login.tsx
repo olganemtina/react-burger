@@ -1,33 +1,35 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { signIn } from '../../services/actions/user';
-import AppError from '../../components/app-error/app-error'
+import {AppError} from '../../components/app-error/app-error'
+import { ILoginFormData } from '../../models/auth';
 
-export default function LoginPage() {
+export const LoginPage = () => {
 	const dispatch = useDispatch();
 
 	const user = useSelector((state)=>{
+		//@ts-ignore
 		return state.user;
 	})
 
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<ILoginFormData>({
 		email: "",
 		password: ""
 	});
 
 	const [formSended, setFormSended] = useState(false);
 
-	const setValue = (evt)=>{
-		const {name, value} = evt.target;
+	const setValue = (evt: SyntheticEvent<HTMLInputElement>)=>{
+		const {name, value} = evt.target as HTMLInputElement;
 		setFormData({
 			...formData,
 			[name]: value
 		})
 	};
 
-	const login = useCallback(async(e)=>{
+	const login = useCallback(async(e: SyntheticEvent<HTMLFormElement>)=>{
 		e.preventDefault();
 		dispatch(signIn(formData));
 		setFormSended(true);
