@@ -1,13 +1,14 @@
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router';
+import { IRouterParams, TRouteForUnauthorizedUsers } from '../../models/routing';
 import { getUser } from '../../services/actions/user';
 
-export function ProtectedRoute({ children, ...rest }) {
+export const ProtectedRoute: FC<TRouteForUnauthorizedUsers<IRouterParams>> = ({ children, ...rest }) => {
 	const dispatch = useDispatch();
 
 	const user = useSelector((state)=>{
+		//@ts-ignore
 		return state.user;
 	})
 
@@ -39,8 +40,3 @@ export function ProtectedRoute({ children, ...rest }) {
 		return <div>Загрузка данных...</div>;
 	}
   }
-
-  ProtectedRoute.propTypes = {
-	children: PropTypes.node.isRequired,
-	...{ path: PropTypes.string.isRequired, exact: PropTypes.bool }
-};

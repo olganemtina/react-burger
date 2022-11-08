@@ -1,13 +1,15 @@
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { RefObject, UIEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ingredientPropTypes from '../../prop-types/ingredient-prop-types';
-import BurgerIngredient from '../burger-ingredient/burger-ingredient';
+import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 import style from './burger-ingredients.module.css';
 
-const getCaption = (type)=>{
+interface IGroupedIngredients{
+    [name: string]: Array<any>;
+}
+
+const getCaption = (type: string)=>{
     switch(type) {
         case "bun":
             return "Булки"
@@ -18,18 +20,18 @@ const getCaption = (type)=>{
     }
 }
 
-export default function BurgerIngredients() {
-    const [current, setCurrent] = useState('bun');
+export const BurgerIngredients = () => {
+    const [current, setCurrent] = useState<string>('bun');
 
-    const buns = useSelector((state)=>{
+    const buns = useSelector((state: any)=>{
         return state.ingredients.buns;
     });
-    const items = useSelector((state)=>{
+    const items = useSelector((state: any)=>{
         return state.ingredients.items;
     });
 
 
-    const burgerConstructorIngredients = useSelector((state)=>{
+    const burgerConstructorIngredients = useSelector((state: any)=>{
         const ingredientsWithBuns = [...state.burgerConstructorIngredients.items];
         if(state.burgerConstructorIngredients.bun)
         {
@@ -52,11 +54,11 @@ export default function BurgerIngredients() {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const handleOpenModal = useCallback((ingredient)=>{
+    const handleOpenModal = useCallback((ingredient: any)=>{
         history.push({ pathname: `/ingredients/${ingredient._id}`, state: {isModal: true} });
     }, [dispatch]);
 
-    const groupedIngredients = useMemo(()=>{
+    const groupedIngredients = useMemo<IGroupedIngredients>(()=>{
         const groupedIngredients = [...buns, ...items].reduce((acc, current)=>{
             acc[current.type].push(current);
             return acc;
@@ -64,9 +66,9 @@ export default function BurgerIngredients() {
         return groupedIngredients;
     }, [buns, items]);
 
-    const handleScroll = useCallback((e)=>{
-        const scrollTop = e.target.scrollTop;
-        const range = {minHeight: 0, maxHeight: refBun.current.clientHeight};
+    const handleScroll = useCallback((e: UIEvent<HTMLDivElement>)=>{
+        const scrollTop = (e.target as HTMLDivElement).scrollTop;
+        const range = {minHeight: 0, maxHeight: (refBun.current as HTMLDivElement).clientHeight};
         Object.keys(groupedIngredients).every((type=>{
             if(range.minHeight <= scrollTop && range.maxHeight >= scrollTop)
             {
@@ -76,18 +78,18 @@ export default function BurgerIngredients() {
             else
             {
                 const currentRef = getRef(type);
-                range.minHeight += currentRef.current.clientHeight;
-                range.maxHeight += currentRef.current.clientHeight;
+                range.minHeight += (currentRef.current as HTMLDivElement).clientHeight;
+                range.maxHeight += (currentRef.current as HTMLDivElement).clientHeight;
             }
             return true;
         }))
     },[]);
 
-    const refBun = useRef(null);
-    const refMain = useRef(null);
-    const refSauce = useRef(null);
+    const refBun = useRef<HTMLDivElement>(null);
+    const refMain = useRef<HTMLDivElement>(null);
+    const refSauce = useRef<HTMLDivElement>(null);
 
-    const getRef = (type)=>{
+    const getRef = (type: string)=>{
         switch(type) {
             case "bun":
                 return refBun;
@@ -95,10 +97,12 @@ export default function BurgerIngredients() {
                 return refMain;
             case "sauce":
                 return refSauce;
+            default:
+                return refBun;
         }
     }
 
-    const goToBlock = (ref, type)=>{
+    const goToBlock = (ref: RefObject<HTMLDivElement>, type: string)=>{
         setCurrent(type);
         ref.current?.scrollIntoView({behavior: 'smooth'});
     }
@@ -115,7 +119,7 @@ export default function BurgerIngredients() {
                 <Tab value="sauce" active={current === 'sauce'} onClick={()=>goToBlock(refSauce, 'sauce')}>
                     Соусы
                 </Tab>
-                <Tab value="main" active={current === 'main'} onClick={()=>goToBlock(refMain, 'main')}>
+                <Tab value="main" active={current === 'main'} onClick={()=>goToBlock(refMain, 'main')} >
                     Начинки
                 </Tab>
             </div>
@@ -148,7 +152,5 @@ export default function BurgerIngredients() {
         </div>
     )
 }
-BurgerIngredients.propTypes = {
-    ingredients: PropTypes.arrayOf(ingredientPropTypes)
-};
+
 

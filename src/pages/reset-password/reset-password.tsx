@@ -1,21 +1,20 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import { NavLink, Redirect, useHistory } from 'react-router-dom';
+import { AppError } from '../../components/app-error/app-error';
+import { IResetFormData } from '../../models/auth';
 import { passwordResetStep2Request } from '../../utils/auth-api';
-import AppError from '../../components/app-error/app-error';
 
-export default function ResetPasswordPage() {
-	const [formData, setFormData] = useState({
+export const ResetPasswordPage = () => {
+	const [formData, setFormData] = useState<IResetFormData>({
 		token: "",
 		password: ""
 	});
 	const [errorMsg, setErrorMsg] = useState("");
 
-	const history = useHistory();
-	const dispatch = useDispatch();
+	const history = useHistory<{ from: string }>();
 
-	const setValue = (target) => {
+	const setValue = (target: HTMLInputElement) => {
 		const {name, value} = target;
 		setFormData({
 			...formData,
@@ -23,7 +22,7 @@ export default function ResetPasswordPage() {
 		})
 	}
 
-	const restoreHandler = useCallback(async(e)=>{
+	const restoreHandler = useCallback(async(e: SyntheticEvent<HTMLFormElement>)=>{
 		e.preventDefault();
 		const result = await passwordResetStep2Request(formData);
 		if(result.success)
@@ -58,7 +57,7 @@ export default function ResetPasswordPage() {
 							/>
 					</div>
 					<div className='mt-6'>
-						<Button htmlType="submit" type="primary" size="medium">
+						<Button htmlType="button" type="primary" size="medium">
 							Сохранить
 						</Button>
 					</div>

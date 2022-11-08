@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 import doneImg from '../../images/done.svg';
 
-export default function OrderDetails() {
+export const OrderDetails = () => {
 	const order = useSelector((state)=>{
+		//@ts-ignore
 		return state.order
 	})
 	return (
