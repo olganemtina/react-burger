@@ -53,6 +53,7 @@ export function socketMiddleware(wsActions: TWsAction): Middleware {
 				};
 
 				socket.onclose = (event: CloseEvent) => {
+					debugger;
 					dispatch(closeFeedConnectionAction(event.reason));
 				};
 

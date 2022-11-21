@@ -2,7 +2,10 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { FeedItem } from "../../../components/feed-item/feed-item";
-import { startConnectionAction } from "../../../services/action-creators/feed";
+import {
+	closeFeedConnectionAction,
+	startConnectionAction,
+} from "../../../services/action-creators/feed";
 import { useFeedOrders } from "../../../services/hooks/useFeedOrders";
 import { RootState } from "../../../services/types";
 import { ordersUserWsUrl } from "../../../services/variables/web-socket";
@@ -30,6 +33,11 @@ export const ProfileOrdersPage = () => {
 		dispatch(
 			startConnectionAction(`${ordersUserWsUrl}?token=${accessToken}`)
 		);
+		return function () {
+			dispatch(
+				closeFeedConnectionAction("Соединение с сокетом завершено")
+			);
+		};
 	}, []);
 
 	const openModalHandler = useCallback(

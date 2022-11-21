@@ -5,7 +5,10 @@ import { useHistory, useLocation } from "react-router";
 import { AppCollection } from "../../components/app-collection/app-collection";
 import { FeedItem } from "../../components/feed-item/feed-item";
 import { InfoCard } from "../../components/info-card/info-card";
-import { startConnectionAction } from "../../services/action-creators/feed";
+import {
+	closeFeedConnectionAction,
+	startConnectionAction,
+} from "../../services/action-creators/feed";
 import { useFeedOrders } from "../../services/hooks/useFeedOrders";
 import { RootState } from "../../services/types";
 import { OrderStatus } from "../../services/types/status";
@@ -37,6 +40,11 @@ export const FeedPage = () => {
 
 	useEffect(() => {
 		dispatch(startConnectionAction(ordersAllWsUrl));
+		return function () {
+			dispatch(
+				closeFeedConnectionAction("Соединение с сокетом завершено")
+			);
+		};
 	}, []);
 
 	const openModalHandler = useCallback(
