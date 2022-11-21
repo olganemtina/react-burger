@@ -2,7 +2,7 @@ import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burg
 import { FC, useRef } from 'react';
 import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
 import { useDispatch } from 'react-redux';
-import { removeBurgerIngredientFromConstructor } from '../../services/action-creators/burger-constructor-ingredients';
+import { removeBurgerIngredientFromConstructorAction } from '../../services/action-creators/burger-constructor-ingredients';
 
 interface IBurgerConstructorItem{
 	name: string;
@@ -22,7 +22,7 @@ type DragItem = {
 export const BurgerConstructorItem : FC<IBurgerConstructorItem>= ({name, price, item_key, image_mobile, type = undefined, draggable, index, moveItem}) => {
 	const dispatch = useDispatch();
 	const removeItem = ()=>{
-		dispatch(removeBurgerIngredientFromConstructor(item_key));
+		dispatch(removeBurgerIngredientFromConstructorAction(item_key));
 	}
 
 	const ref = useRef<HTMLDivElement>(null)

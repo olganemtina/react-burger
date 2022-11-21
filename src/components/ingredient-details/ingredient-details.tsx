@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IIngredientDetails } from '../../models/ingredient';
+import { IIngredientDetails } from '../../services/types/ingredient';
 
 export const IngredientDetails: FC<IIngredientDetails> = ({image_large, name, calories, proteins, fat, carbohydrates}) => {
     return (

@@ -12,7 +12,7 @@ export default function AppHeader() {
                             <BurgerIcon type="primary" />
                         </span>
                     </AppNavItem>
-                    <AppNavItem exact={true} className="p-5 mr-2 text text_type_main-default" path="/profile/orders" text="Лента заказов">
+                    <AppNavItem exact={true} className="p-5 mr-2 text text_type_main-default" path="/feed" text="Лента заказов">
                         <span className='mr-2'>
                             <ListIcon type="primary" />
                         </span>

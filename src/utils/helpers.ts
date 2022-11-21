@@ -1,9 +1,15 @@
-import { useDispatch } from "react-redux";
+export const getCorrectPluralFormText = (number: number, text: string): string =>
+{
+	switch(text){
+		case "день":{
+			if (number >= 10 && number <=20 || (number % 10 == 0) || (number % 10 >= 5))
+				return "дней";
+			else if (number % 10 == 1)
+				return "день";
+			else
+				return "дня"
+		}
 
-export const useAppDispatch: () => any = useDispatch;
-
-export function checkReponseAndGetData (response: Response) {
-	return response.ok
-		? response.json()
-		: response.json().then((err: any) => Promise.reject(err));
-};
+	}
+	return text;
+}
