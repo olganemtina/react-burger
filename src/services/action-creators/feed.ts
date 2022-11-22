@@ -48,13 +48,13 @@ export const startConnectionAction = (
 
 export const getOpenConnectionAction = (): IGetFeedOpenConnectionAction => {
 	return {
-		type: "WS_FEED_CONNECTION_SUCCESS",
+		type: WS_FEED_CONNECTION_SUCCESS,
 	};
 };
 
 export const setOrdersAction = (data: IFeed): ISetFeedAction => {
 	return {
-		type: "WS_FEED_GET_MESSAGE",
+		type: WS_FEED_GET_MESSAGE,
 		payload: data,
 	};
 };
@@ -63,7 +63,7 @@ export const closeFeedConnectionAction = (
 	message: string
 ): ICloseFeedConnectionAction => {
 	return {
-		type: "WS_FEED_CONNECTION_CLOSED",
+		type: WS_FEED_CONNECTION_CLOSED,
 		payload: message,
 	};
 };
@@ -72,7 +72,7 @@ export const errorFeedConnectionAction = (
 	data: Event
 ): IErrorFeedConnectionAction => {
 	return {
-		type: "WS_FEED_CONNECTION_ERROR",
+		type: WS_FEED_CONNECTION_ERROR,
 		payload: data,
 	};
 };
@@ -81,7 +81,7 @@ export const sendFeedMessageAction = (
 	data: CFeedItem
 ): ISendFeedMessageAction => {
 	return {
-		type: "WS_FEED_SEND_MESSAGE",
+		type: WS_FEED_SEND_MESSAGE,
 		payload: data,
 	};
 };
