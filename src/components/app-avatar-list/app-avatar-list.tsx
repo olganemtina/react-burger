@@ -1,7 +1,6 @@
-import classNames from "classnames";
 import { FC, useMemo } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { IIngredientDetails } from "../../services/types/ingredient";
+import { classNames } from "../../utils/class-names";
 import { AppAvatar } from "../app-avatar/app-avatar";
 import style from "./app-avatar-list.module.scss";
 
@@ -29,7 +28,7 @@ export const AppAvatarList: FC<IAppAvatarList> = ({ items, showCount }) => {
 			)}
 		>
 			{restCountIngredientsData > 0 && (
-				<div key={uuidv4()} className={style.avatar_container}>
+				<div className={style.avatar_container}>
 					<AppAvatar
 						imgUrl={items[items.length - 1].image_mobile}
 						text={
@@ -40,9 +39,12 @@ export const AppAvatarList: FC<IAppAvatarList> = ({ items, showCount }) => {
 					/>
 				</div>
 			)}
-			{splicedIngredientsData.map((ingredient) => {
+			{splicedIngredientsData.map((ingredient, index) => {
 				return (
-					<div key={uuidv4()} className={style.avatar_container}>
+					<div
+						key={`${ingredient._id}${index}`}
+						className={style.avatar_container}
+					>
 						<AppAvatar imgUrl={ingredient.image_mobile} />
 					</div>
 				);

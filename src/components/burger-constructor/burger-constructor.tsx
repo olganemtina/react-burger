@@ -23,6 +23,7 @@ import { OrderSendNotify } from "../order-send-notify/order-send-notify";
 import style from "./burger-constructor.module.css";
 import { AppDataWithCurrency } from "../app-price/app-price";
 import { useSelector } from "../../utils/hooks";
+import { kMaxLength } from "buffer";
 
 export const BurgerConstructor = () => {
 	const [bunTop, bunBottom] = useSelector((state) => {
@@ -160,7 +161,7 @@ export const BurgerConstructor = () => {
 					return (
 						<BurgerConstructorItem
 							key={x.key}
-							item_key={uuidv4()}
+							item_key={x.key || index.toString()}
 							draggable={true}
 							name={x.name}
 							price={x.price}

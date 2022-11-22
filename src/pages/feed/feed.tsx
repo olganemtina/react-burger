@@ -1,7 +1,7 @@
-import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
+import { v4 as uuidv4 } from "uuid";
 import { AppCollection } from "../../components/app-collection/app-collection";
 import { FeedItem } from "../../components/feed-item/feed-item";
 import { InfoCard } from "../../components/info-card/info-card";
@@ -13,9 +13,9 @@ import { useFeedOrders } from "../../services/hooks/useFeedOrders";
 import { RootState } from "../../services/types";
 import { OrderStatus } from "../../services/types/status";
 import { ordersAllWsUrl } from "../../services/variables/web-socket";
+import { classNames } from "../../utils/class-names";
 import {} from "../../utils/date-extensions";
 import style from "./feed.module.scss";
-import { v4 as uuidv4 } from "uuid";
 
 export const FeedPage = () => {
 	const history = useHistory();

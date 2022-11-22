@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback } from "react";
 import { FeedItemWithIngredients } from "../../services/types/feed";
 import { OrderStatus } from "../../services/types/status";
+import { classNames } from "../../utils/class-names";
 import { AppAvatarList } from "../app-avatar-list/app-avatar-list";
 import { AppDataWithCurrency } from "../app-price/app-price";
 
@@ -13,9 +13,10 @@ export const FeedItem: FC<{
 	const openModalHandler = useCallback(() => {
 		openModal();
 	}, []);
-	const statusClassName = classNames("pt-2", {
-		feed_state_active: order.status == OrderStatus.done,
-	});
+	const statusClassName = classNames(
+		"pt-2",
+		order.status == OrderStatus.done ? "feed_state_active" : ""
+	);
 
 	return (
 		<div

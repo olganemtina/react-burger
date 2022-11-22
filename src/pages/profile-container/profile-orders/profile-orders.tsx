@@ -54,7 +54,7 @@ export const ProfileOrdersPage = () => {
 		<div className={style.scroll_container}>
 			<div className="mr-2">
 				{ordersDesc?.map((order) => (
-					<div key={uuidv4()}>
+					<div key={order._id}>
 						<FeedItem
 							order={order}
 							showStatus={true}

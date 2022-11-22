@@ -1,5 +1,5 @@
-import classNames from "classnames";
 import { FC } from "react";
+import { classNames } from "../../utils/class-names";
 import style from "./app-avatar.module.scss";
 
 export interface IAppAvatar {

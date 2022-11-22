@@ -1,12 +1,11 @@
-import classNames from "classnames";
 import { FC } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { IAppCollection } from "../../services/types/collection";
+import { classNames } from "../../utils/class-names";
 
 export const AppCollection: FC<IAppCollection & { className?: string }> = ({
 	caption,
 	items,
-	className,
+	className = "",
 	itemCountInRow = 10,
 }) => {
 	var cssClass = classNames("mb-2", className);
@@ -21,13 +20,13 @@ export const AppCollection: FC<IAppCollection & { className?: string }> = ({
 						index < rowCount
 							? (index + 1) * itemCountInRow
 							: items.length + 1;
-					const partOtems = items.slice(start, finish);
+					const partItems = items.slice(start, finish);
 					return (
-						<div key={uuidv4()} className="mr-4 mb-4">
-							{partOtems.map((item) => {
+						<div key={row} className="mr-4 mb-4">
+							{partItems.map((item) => {
 								return (
 									<div
-										key={uuidv4()}
+										key={item}
 										className={cssClass}
 									>
 										{item}

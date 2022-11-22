@@ -1,30 +1,27 @@
 import { useEffect } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { getIngredients } from "../../services/action-types/burger-ingredients";
-import { useAppDispatch } from "../../utils/api/request-api-helpers";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import {
-	LoginPage,
-	RegisterPage,
 	ForgotPasswordPage,
-	ResetPasswordPage,
-	ProfileContainerPage,
 	IngredientPage,
+	LoginPage,
+	ProfileContainerPage,
 	ProfileOrdersPage,
 	ProfilePage,
+	RegisterPage,
+	ResetPasswordPage,
 } from "../../pages";
+import { FeedPage } from "../../pages/feed/feed";
+import { FeedDetailsPage } from "../../pages/feed/feed-details/feed-details";
+import { getIngredients } from "../../services/action-types/burger-ingredients";
+import { useAppDispatch } from "../../utils/api/request-api-helpers";
+import { useSelector } from "../../utils/hooks";
+import { AppBody } from "../app-body/app-body";
 import { AppError } from "../app-error/app-error";
 import AppHeader from "../app-header/app-header";
 import { AppLoad } from "../app-load/app-load";
-import { BurgerConstructor } from "../burger-constructor/burger-constructor";
-import { BurgerIngredients } from "../burger-ingredients/burger-ingredients";
-import { ProtectedRoute } from "../protected-route/protected-route";
 import { RouteForUnauthorizedUsers } from "../not-authorized-route/not-authorized-route";
+import { ProtectedRoute } from "../protected-route/protected-route";
 import "./app.css";
-import { FeedPage } from "../../pages/feed/feed";
-import { FeedDetailsPage } from "../../pages/feed/feed-details/feed-details";
-import { useSelector } from "../../utils/hooks";
 
 function App() {
 	const { ingredientsRequestFailed, ingredientsRequest, error } =
@@ -34,21 +31,6 @@ function App() {
 
 	const dispatch = useAppDispatch();
 
-	const AppBody = () => {
-		return (
-			<main className="display_flex">
-				<DndProvider backend={HTML5Backend}>
-					<div className="width_50_percent">
-						<BurgerIngredients />
-					</div>
-					<div className="mt-25 ml-10">
-						<BurgerConstructor />
-					</div>
-				</DndProvider>
-			</main>
-		);
-	};
-
 	useEffect(() => {
 		dispatch(getIngredients());
 	}, [dispatch]);
@@ -57,7 +39,7 @@ function App() {
 		<div className="App">
 			<Router>
 				<Switch>
-					<Route path="/" exact={true}>
+					<Route path="/" exact>
 						<AppHeader />
 						{ingredientsRequestFailed ? (
 							<AppError error={error} />
@@ -67,55 +49,49 @@ function App() {
 							<AppBody />
 						)}
 					</Route>
-					<Route path="/feed" exact={true}>
+					<Route path="/feed" exact>
 						<AppHeader />
 						<FeedPage />
 					</Route>
-					<Route path="/feed/:id" exact={true}>
+					<Route path="/feed/:id" exact>
 						<AppHeader />
 						<FeedDetailsPage />
 					</Route>
-					<RouteForUnauthorizedUsers path="/login" exact={true}>
+					<RouteForUnauthorizedUsers path="/login" exact>
 						<LoginPage />
 					</RouteForUnauthorizedUsers>
-					<RouteForUnauthorizedUsers
-						path="/register"
-						exact={true}
-					>
+					<RouteForUnauthorizedUsers path="/register" exact>
 						<RegisterPage />
 					</RouteForUnauthorizedUsers>
 					<RouteForUnauthorizedUsers
 						path="/forgot-password"
-						exact={true}
+						exact
 					>
 						<ForgotPasswordPage />
 					</RouteForUnauthorizedUsers>
 					<RouteForUnauthorizedUsers
 						path="/reset-password"
-						exact={true}
+						exact
 					>
 						<ResetPasswordPage />
 					</RouteForUnauthorizedUsers>
-					<ProtectedRoute path={"/profile"} exact={true}>
+					<ProtectedRoute path={"/profile"} exact>
 						<AppHeader />
 						<ProfileContainerPage>
 							<ProfilePage />
 						</ProfileContainerPage>
 					</ProtectedRoute>
-					<ProtectedRoute path={"/profile/orders"} exact={true}>
+					<ProtectedRoute path={"/profile/orders"} exact>
 						<AppHeader />
 						<ProfileContainerPage>
 							<ProfileOrdersPage />
 						</ProfileContainerPage>
 					</ProtectedRoute>
-					<ProtectedRoute
-						path={"/profile/orders/:id"}
-						exact={true}
-					>
+					<ProtectedRoute path={"/profile/orders/:id"} exact>
 						<AppHeader />
 						<FeedDetailsPage />
 					</ProtectedRoute>
-					<Route path="/ingredients/:id" exact={true}>
+					<Route path="/ingredients/:id" exact>
 						<AppHeader />
 						<IngredientPage />
 					</Route>

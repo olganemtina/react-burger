@@ -21,7 +21,7 @@ export const ProfileContainerPage: FC<{ children: React.ReactNode }> = ({
 				<div className="pt-5 pb-5">
 					<AppNavItem
 						text="Профиль"
-						exact={true}
+						exact
 						className="text text_type_main-medium text_color_inactive text_decoration_none"
 						path="/profile"
 					/>
@@ -29,7 +29,7 @@ export const ProfileContainerPage: FC<{ children: React.ReactNode }> = ({
 				<div className="pt-5 pb-5">
 					<AppNavItem
 						text="История заказов"
-						exact={true}
+						exact
 						className="text text_type_main-medium text_color_inactive text_decoration_none"
 						path="/profile/orders"
 					/>
