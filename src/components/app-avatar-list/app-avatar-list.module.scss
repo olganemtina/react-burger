@@ -1,0 +1,7 @@
+.avatars_list {
+	display: flex;
+
+	.avatar_container:not(:first-child) {
+		margin-right: -15px;
+	}
+}

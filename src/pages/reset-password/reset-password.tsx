@@ -2,8 +2,8 @@ import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burg
 import { SyntheticEvent, useCallback, useState } from 'react';
 import { NavLink, Redirect, useHistory } from 'react-router-dom';
 import { AppError } from '../../components/app-error/app-error';
-import { IResetFormData } from '../../models/auth';
-import { passwordResetStep2Request } from '../../utils/auth-api';
+import { IResetFormData } from '../../services/types/auth';
+import { passwordResetStep2Request } from '../../utils/api/auth-api';
 
 export const ResetPasswordPage = () => {
 	const [formData, setFormData] = useState<IResetFormData>({

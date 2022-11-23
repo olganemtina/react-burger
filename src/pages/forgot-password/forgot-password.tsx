@@ -2,7 +2,7 @@ import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-component
 import { useCallback, useState } from 'react';
 import {AppError} from '../../components/app-error/app-error';
 import { NavLink, useHistory } from 'react-router-dom';
-import { passwordResetStep1Request } from '../../utils/auth-api';
+import { passwordResetStep1Request } from '../../utils/api/auth-api';
 
 export const ForgotPasswordPage = () => {
 	const history = useHistory();

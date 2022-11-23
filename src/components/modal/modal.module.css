@@ -4,3 +4,8 @@
 	border-radius: 40px;
 }
 
+
+.scroll_container{
+	height: 80vh;
+	overflow-y: auto;
+}

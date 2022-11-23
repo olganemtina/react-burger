@@ -1,5 +1,5 @@
-import { IRequestData } from "../models/fetch";
-import { checkReponseAndGetData } from "./helpers";
+import { IRequestData } from "../services/types/fetch";
+import { checkReponseAndGetData } from "./api/request-api-helpers";
 
 export async function requestWithBody<T>({url, method, headers, formData}: IRequestData<T>) {
 	return await fetch(url, { 

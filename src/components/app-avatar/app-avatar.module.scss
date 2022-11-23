@@ -1,0 +1,16 @@
+.avatar{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 64px;
+	height: 64px;
+	border: 2px solid blueviolet;
+	border-radius: 50%;
+	background-size: cover;
+    background-position: center;
+    background-color: #2f2f37;
+}
+
+.text_bg{
+	background: blueviolet;
+}
