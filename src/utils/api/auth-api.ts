@@ -8,15 +8,17 @@ import { IRequestData, IResponseUserData } from "../../services/types/fetch";
 import { deleteCookie, getCookie, setCookie } from "../cookie";
 import { requestGet, requestWithBody } from "../request-api";
 
-const loginUrl = "https://norma.nomoreparties.space/api/auth/login";
-const registerUrl = "https://norma.nomoreparties.space/api/auth/register";
-const getUserUrl = "https://norma.nomoreparties.space/api/auth/user";
-const passwordResetStep1Url =
+export const loginUrl = "https://norma.nomoreparties.space/api/auth/login";
+export const registerUrl =
+	"https://norma.nomoreparties.space/api/auth/register";
+export const getUserUrl = "https://norma.nomoreparties.space/api/auth/user";
+export const passwordResetStep1Url =
 	"https://norma.nomoreparties.space/api/password-reset";
-const passwordResetStep2Url =
+export const passwordResetStep2Url =
 	"https://norma.nomoreparties.space/api/password-reset/reset";
-const signOutUrl = "https://norma.nomoreparties.space/api/auth/logout";
-const updateAccessTokenUrl = "https://norma.nomoreparties.space/api/auth/token";
+export const signOutUrl = "https://norma.nomoreparties.space/api/auth/logout";
+export const updateAccessTokenUrl =
+	"https://norma.nomoreparties.space/api/auth/token";
 
 export const loginRequest = async (formData: ILoginFormData) => {
 	const requestData: IRequestData<ILoginFormData> = {

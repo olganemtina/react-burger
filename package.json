@@ -31,7 +31,7 @@
 		"redux-devtools-extension": "^2.13.9",
 		"redux-thunk": "^2.4.1",
 		"sass": "^1.56.1",
-		"typescript": "^4.8.2",
+		"typescript": "^4.9.3",
 		"uuid": "^8.3.2",
 		"web-vitals": "^1.0.1"
 	},
@@ -39,7 +39,8 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"cypress:open": "./node_modules/.bin/cypress open"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -60,7 +61,16 @@
 		]
 	},
 	"devDependencies": {
+		"@types/enzyme": "^3.10.12",
+		"@types/enzyme-adapter-react-16": "^1.0.6",
 		"@types/react-router-dom": "^5.3.3",
-		"@types/uuid": "^8.3.4"
+		"@types/react-test-renderer": "^18.0.0",
+		"@types/uuid": "^8.3.4",
+		"cypress": "^11.2.0",
+		"enzyme": "^3.11.0",
+		"enzyme-adapter-react-16": "^1.15.7",
+		"fetch-mock": "^9.11.0",
+		"react-test-renderer": "^17.0.1",
+		"redux-mock-store": "^1.5.4"
 	}
 }

@@ -6,13 +6,13 @@ import {
 } from "../action-types/user";
 import { IUserData } from "../types/auth";
 
-export interface IInitialSUserState {
+export interface IInitialUserState {
 	loaded: boolean;
 	data: IUserData | null;
 	error: string | null;
 }
 
-const initialUserState: IInitialSUserState = {
+export const initialUserState: IInitialUserState = {
 	loaded: false,
 	data: null,
 	error: null,

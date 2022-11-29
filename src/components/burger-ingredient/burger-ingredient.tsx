@@ -35,6 +35,7 @@ export const BurgerIngredient: FC<IBurgerIngredient> = ({
 			ref={dragRef}
 			className="mb-8 position_relative"
 			onClick={handleOpenModal}
+			data-testid="draggable-item"
 		>
 			{count > 0 && <Counter count={count} size="default" />}
 			<div className="text_align_center pl-4 pr-4">
@@ -43,7 +44,10 @@ export const BurgerIngredient: FC<IBurgerIngredient> = ({
 			<div className="text text_type_digits-default pt-1 pb-1 text_align_center">
 				<AppDataWithCurrency data={description} />
 			</div>
-			<div className="text_align_center text text_type_main-default">
+			<div
+				data-testid="current-ingredient-name"
+				className="text_align_center text text_type_main-default"
+			>
 				{caption}
 			</div>
 		</div>

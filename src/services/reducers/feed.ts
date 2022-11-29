@@ -11,7 +11,7 @@ export interface IInitalFeedState {
 	message: string | null;
 }
 
-const initalFeedState: IInitalFeedState = {
+export const initalFeedState: IInitalFeedState = {
 	connected: false,
 	orders: [],
 	total: null,

@@ -1,18 +1,19 @@
 import { TOrderAction } from "../action-creators/order";
 import {
-	SET_ORDER_FAILED, SET_ORDER_REQUEST,
-	SET_ORDER_SUCCESS
+	SET_ORDER_FAILED,
+	SET_ORDER_REQUEST,
+	SET_ORDER_SUCCESS,
 } from "../action-types/order";
 
-export interface IInitialOrderState{
+export interface IInitialOrderState {
 	name: string;
 	orderNumber: number | null;
 	orderRequest: boolean;
 	orderRequestFailed: boolean;
-	errorMessage: string | null
+	errorMessage: string | null;
 }
 
-const initialOrderState: IInitialOrderState = {
+export const initialOrderState: IInitialOrderState = {
 	name: "",
 	orderNumber: null,
 	orderRequest: false,
@@ -20,7 +21,10 @@ const initialOrderState: IInitialOrderState = {
 	errorMessage: null,
 };
 
-export default function orderReducer(state = initialOrderState, action : TOrderAction): IInitialOrderState {
+export default function orderReducer(
+	state = initialOrderState,
+	action: TOrderAction
+): IInitialOrderState {
 	switch (action.type) {
 		case SET_ORDER_REQUEST: {
 			return {

@@ -144,7 +144,7 @@ export const BurgerConstructor = () => {
 	);
 
 	return (
-		<div ref={dropTarget}>
+		<div ref={dropTarget} data-testid="drop-area">
 			<div className={style.scroll_container}>
 				{bunTop && (
 					<BurgerConstructorItem

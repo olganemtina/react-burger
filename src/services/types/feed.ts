@@ -9,7 +9,7 @@ export interface IFeed {
 }
 
 export class CFeedItem {
-	ingredients: ReadonlyArray<string> = [];
+	ingredients: Array<string> = [];
 	_id!: string;
 	status!: OrderStatus;
 	number!: number;
