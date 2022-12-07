@@ -38,9 +38,9 @@ function App() {
 	return (
 		<div className={style.App}>
 			<Router>
+				<AppHeader />
 				<Switch>
 					<Route path="/" exact>
-						<AppHeader />
 						{ingredientsRequestFailed ? (
 							<AppError error={error} />
 						) : ingredientsRequest ? (
@@ -50,11 +50,9 @@ function App() {
 						)}
 					</Route>
 					<Route path="/feed" exact>
-						<AppHeader />
 						<FeedPage />
 					</Route>
 					<Route path="/feed/:id" exact>
-						<AppHeader />
 						<FeedDetailsPage />
 					</Route>
 					<RouteForUnauthorizedUsers path="/login" exact>
@@ -76,23 +74,19 @@ function App() {
 						<ResetPasswordPage />
 					</RouteForUnauthorizedUsers>
 					<ProtectedRoute path={"/profile"} exact>
-						<AppHeader />
 						<ProfileContainerPage>
 							<ProfilePage />
 						</ProfileContainerPage>
 					</ProtectedRoute>
 					<ProtectedRoute path={"/profile/orders"} exact>
-						<AppHeader />
 						<ProfileContainerPage>
 							<ProfileOrdersPage />
 						</ProfileContainerPage>
 					</ProtectedRoute>
 					<ProtectedRoute path={"/profile/orders/:id"} exact>
-						<AppHeader />
 						<FeedDetailsPage />
 					</ProtectedRoute>
 					<Route path="/ingredients/:id" exact>
-						<AppHeader />
 						<IngredientPage />
 					</Route>
 				</Switch>
