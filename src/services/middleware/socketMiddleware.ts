@@ -1,15 +1,4 @@
 import { Middleware, MiddlewareAPI } from "redux";
-import {
-	closeFeedConnectionAction,
-	errorFeedConnectionAction,
-	getOpenConnectionAction,
-	setOrdersAction,
-	TWsFeedAction,
-} from "../action-creators/feed";
-import {
-	WS_FEED_CONNECTION_CLOSED,
-	WS_FEED_SEND_MESSAGE,
-} from "../action-types/feed";
 import type { AppDispatch, RootState } from "../types";
 import { IFeed } from "../types/feed";
 import { wsActionsFeed } from "../constants/web-socket";
@@ -26,7 +15,7 @@ export function socketMiddleware(wsActions: typeof wsActionsFeed): Middleware {
 		let socketOpened = false;
 		const { dispatch, getState } = store;
 		const user = getState().user;
-		return (next) => (action: TWsFeedAction) => {
+		return (next) => (action) => {
 			const { type } = action;
 			if (type === wsActions.wsInit) {
 				const url = action.url;
@@ -34,12 +23,12 @@ export function socketMiddleware(wsActions: typeof wsActionsFeed): Middleware {
 			}
 			if (socket) {
 				socket.onopen = (event: Event) => {
-					dispatch(getOpenConnectionAction());
+					dispatch({ type: wsActions.onOpen });
 					socketOpened = true;
 				};
 
 				socket.onerror = (event) => {
-					dispatch(errorFeedConnectionAction(event));
+					dispatch({ type: wsActions.onError, payload: event });
 				};
 
 				socket.onmessage = (event: MessageEvent) => {
@@ -48,17 +37,24 @@ export function socketMiddleware(wsActions: typeof wsActionsFeed): Middleware {
 						message: string;
 					};
 					if (parsedData.success) {
-						dispatch(setOrdersAction(parsedData));
+						dispatch({
+							type: wsActions.onMessage,
+							payload: parsedData,
+						});
 					} else {
-						dispatch(
-							closeFeedConnectionAction(parsedData.message)
-						);
+						dispatch({
+							type: wsActions.onClose,
+							payload: parsedData.message,
+						});
 					}
 				};
 
 				socket.onclose = (event: CloseEvent) => {
 					if (socketOpened) {
-						dispatch(closeFeedConnectionAction(event.reason));
+						dispatch({
+							type: wsActions.onClose,
+							payload: event.reason,
+						});
 					} else {
 						console.log(
 							`ws with url=${socket?.url} is closed`
@@ -66,7 +62,7 @@ export function socketMiddleware(wsActions: typeof wsActionsFeed): Middleware {
 					}
 				};
 
-				if (type === WS_FEED_SEND_MESSAGE) {
+				if (type === wsActions.wsSendMessage) {
 					const message = {
 						...action.payload,
 						token: user.data,
@@ -74,7 +70,7 @@ export function socketMiddleware(wsActions: typeof wsActionsFeed): Middleware {
 					socket.send(JSON.stringify(message));
 				}
 
-				if (type === WS_FEED_CONNECTION_CLOSED) {
+				if (type === wsActions.onClose) {
 					socket.close();
 					socketOpened = false;
 				}
