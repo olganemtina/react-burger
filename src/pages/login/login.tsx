@@ -9,6 +9,7 @@ import { AppError } from "../../components/app-error/app-error";
 import { signIn } from "../../services/action-types/user";
 import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { useForm } from "../../services/hooks/use-form";
 import { ILoginFormData } from "../../services/types/auth";
 
 export const LoginPage = () => {
@@ -18,20 +19,12 @@ export const LoginPage = () => {
 		return state.user;
 	});
 
-	const [formData, setFormData] = useState<ILoginFormData>({
+	const { formData, handleChange, setFormData } = useForm<ILoginFormData>({
 		email: "",
 		password: "",
 	});
 
 	const [formSended, setFormSended] = useState(false);
-
-	const setValue = (evt: SyntheticEvent<HTMLInputElement>) => {
-		const { name, value } = evt.target as HTMLInputElement;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
 
 	const login = useCallback(
 		async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -59,7 +52,7 @@ export const LoginPage = () => {
 					<Input
 						type={"text"}
 						placeholder={"E-mail"}
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.email}
 						name={"email"}
 						error={false}
@@ -69,7 +62,7 @@ export const LoginPage = () => {
 				</div>
 				<div className="mt-6">
 					<PasswordInput
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.password}
 						name={"password"}
 					/>

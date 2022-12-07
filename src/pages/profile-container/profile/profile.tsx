@@ -2,10 +2,17 @@ import {
 	Button,
 	Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	SyntheticEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { updateUser } from "../../../services/action-types/user";
 import { useAppDispatch } from "../../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../../services/hooks/use-app-selector";
+import { useForm } from "../../../services/hooks/use-form";
 import { IRegisterFormData } from "../../../services/types/auth";
 
 interface IInputsDisabledSettings {
@@ -34,22 +41,20 @@ export const ProfilePage = () => {
 	const inputEmailRef = useRef<HTMLInputElement>(null);
 	const inputPasswordRef = useRef<HTMLInputElement>(null);
 
-	const [formData, setFormData] = useState<IRegisterFormData>({
-		name: "",
-		email: "",
-		password: "",
-	});
+	const { formData, handleChange, setFormData } = useForm<IRegisterFormData>(
+		{
+			name: "",
+			email: "",
+			password: "",
+		}
+	);
 
 	useEffect(() => {
 		setFormData({ ...user.data, password: "" } as IRegisterFormData);
 	}, [user.data]);
 
-	const setValue = (target: HTMLInputElement) => {
-		const { name, value } = target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
+	const setValue = (target: SyntheticEvent<HTMLInputElement>) => {
+		handleChange(target);
 		setFormChanged(true);
 	};
 	const onIconClick = (inputName: string) => {
@@ -91,7 +96,7 @@ export const ProfilePage = () => {
 				<Input
 					type={"text"}
 					placeholder={"Имя"}
-					onChange={(e) => setValue(e.target)}
+					onChange={(e) => setValue(e)}
 					icon={"EditIcon"}
 					value={formData.name}
 					name={"name"}
@@ -107,7 +112,7 @@ export const ProfilePage = () => {
 				<Input
 					type={"text"}
 					placeholder={"Логин"}
-					onChange={(e) => setValue(e.target)}
+					onChange={(e) => setValue(e)}
 					icon={"EditIcon"}
 					value={formData.email}
 					name={"email"}
@@ -123,7 +128,7 @@ export const ProfilePage = () => {
 				<Input
 					type={"password"}
 					placeholder={"Пароль"}
-					onChange={(e) => setValue(e.target)}
+					onChange={(e) => setValue(e)}
 					icon={"EditIcon"}
 					value={formData.password}
 					name={"password"}

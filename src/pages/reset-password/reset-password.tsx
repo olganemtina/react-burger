@@ -6,25 +6,19 @@ import {
 import { SyntheticEvent, useCallback, useState } from "react";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { AppError } from "../../components/app-error/app-error";
+import { useForm } from "../../services/hooks/use-form";
 import { IResetFormData } from "../../services/types/auth";
 import { passwordResetStep2Request } from "../../utils/api/auth-api";
 
 export const ResetPasswordPage = () => {
-	const [formData, setFormData] = useState<IResetFormData>({
+	const { formData, handleChange, setFormData } = useForm<IResetFormData>({
 		token: "",
 		password: "",
 	});
+
 	const [errorMsg, setErrorMsg] = useState("");
 
 	const history = useHistory<{ from: string }>();
-
-	const setValue = (target: HTMLInputElement) => {
-		const { name, value } = target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
 
 	const restoreHandler = useCallback(
 		async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -51,7 +45,7 @@ export const ResetPasswordPage = () => {
 					{errorMsg && <AppError error={errorMsg} />}
 					<div className="mt-6">
 						<PasswordInput
-							onChange={(e) => setValue(e.target)}
+							onChange={(e) => handleChange(e)}
 							value={formData.password}
 							name={"password"}
 						/>
@@ -60,7 +54,7 @@ export const ResetPasswordPage = () => {
 						<Input
 							type={"text"}
 							placeholder={"Введите код из письма"}
-							onChange={(e) => setValue(e.target)}
+							onChange={(e) => handleChange(e)}
 							value={formData.token}
 							error={false}
 							name={"token"}
@@ -69,7 +63,7 @@ export const ResetPasswordPage = () => {
 					</div>
 					<div className="mt-6">
 						<Button
-							htmlType="button"
+							htmlType="submit"
 							type="primary"
 							size="medium"
 						>

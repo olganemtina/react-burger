@@ -6,17 +6,21 @@ import { useCallback, useState } from "react";
 import { AppError } from "../../components/app-error/app-error";
 import { NavLink, useHistory } from "react-router-dom";
 import { passwordResetStep1Request } from "../../utils/api/auth-api";
+import { useForm } from "../../services/hooks/use-form";
 
 export const ForgotPasswordPage = () => {
 	const history = useHistory();
-	const [email, setEmail] = useState<string>("");
+	const { formData, handleChange, setFormData } = useForm<{ email: string }>(
+		{ email: "" }
+	);
+
 	const [errorMsg, setErrorMsg] = useState<string>();
 
 	const restoreHandler = useCallback(
 		async (e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			const result = await passwordResetStep1Request({
-				email: email,
+				email: formData.email,
 			});
 			if (result.success) {
 				history.replace({
@@ -27,7 +31,7 @@ export const ForgotPasswordPage = () => {
 				setErrorMsg(result.message);
 			}
 		},
-		[email]
+		[formData.email]
 	);
 	return (
 		<div
@@ -41,10 +45,10 @@ export const ForgotPasswordPage = () => {
 				<div className="mt-6">
 					<Input
 						type={"text"}
-						placeholder={"Укажите e-mail"}
-						onChange={(e) => setEmail(e.target.value)}
-						value={email}
-						name={"e-mail"}
+						placeholder={"Укажите email"}
+						onChange={(e) => handleChange(e)}
+						value={formData.email}
+						name={"email"}
 						error={false}
 						size={"default"}
 					/>
