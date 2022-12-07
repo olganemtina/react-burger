@@ -7,6 +7,7 @@ import { AppError } from "../../components/app-error/app-error";
 import { NavLink, useHistory } from "react-router-dom";
 import { passwordResetStep1Request } from "../../utils/api/auth-api";
 import { useForm } from "../../services/hooks/use-form";
+import { classNames } from "../../utils/class-names";
 
 export const ForgotPasswordPage = () => {
 	const history = useHistory();
@@ -35,7 +36,10 @@ export const ForgotPasswordPage = () => {
 	);
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center mt-6`}
+			className={classNames(
+				"form_container_center_page",
+				"text_align_center"
+			)}
 		>
 			<form onSubmit={(e) => restoreHandler(e)}>
 				<h1 className="text text_type_main-medium">

@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { useForm } from "../../services/hooks/use-form";
 import { ILoginFormData } from "../../services/types/auth";
+import { classNames } from "../../utils/class-names";
 
 export const LoginPage = () => {
 	const dispatch = useAppDispatch();
@@ -41,7 +42,10 @@ export const LoginPage = () => {
 
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center mt-6`}
+			className={classNames(
+				"form_container_center_page",
+				"text_align_center"
+			)}
 		>
 			<form onSubmit={(e) => login(e)}>
 				<h1 className="text text_type_main-medium">Вход</h1>

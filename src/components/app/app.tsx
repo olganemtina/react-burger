@@ -36,7 +36,7 @@ function App() {
 	}, [dispatch]);
 
 	return (
-		<div className={style.App}>
+		<div className={`${style.App}`}>
 			<Router>
 				<AppHeader />
 				<Switch>
