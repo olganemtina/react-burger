@@ -3,10 +3,10 @@ import {
 	Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { updateUser } from "../../../services/action-types/user";
+import { useAppDispatch } from "../../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../../services/hooks/use-app-selector";
 import { IRegisterFormData } from "../../../services/types/auth";
-import { useSelector } from "../../../utils/hooks";
 
 interface IInputsDisabledSettings {
 	name?: boolean;
@@ -15,11 +15,11 @@ interface IInputsDisabledSettings {
 }
 
 export const ProfilePage = () => {
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const [inputsDisabled, setInputDisabled] =
 		useState<IInputsDisabledSettings>({

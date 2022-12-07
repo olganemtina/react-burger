@@ -1,13 +1,7 @@
-import {
-	Button,
-	CurrencyIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDrop } from "react-dnd";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { v4 as uuidv4 } from "uuid";
-import { IIngredientDetails } from "../../services/types/ingredient";
 import {
 	addBurgerIngredientToConstructorAction,
 	clearBurgerIngredientsFromConstructorAction,
@@ -17,27 +11,28 @@ import {
 import { setOrderFailedAction } from "../../services/action-creators/order";
 import { setOrder } from "../../services/action-types/order";
 import { getUser } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { IIngredientDetails } from "../../services/types/ingredient";
+import { AppDataWithCurrency } from "../app-price/app-price";
 import { BurgerConstructorItem } from "../burger-constructor-item/burger-constructor-item";
 import { Modal } from "../modal/modal";
 import { OrderSendNotify } from "../order-send-notify/order-send-notify";
 import style from "./burger-constructor.module.css";
-import { AppDataWithCurrency } from "../app-price/app-price";
-import { useSelector } from "../../utils/hooks";
-import { kMaxLength } from "buffer";
 
 export const BurgerConstructor = () => {
-	const [bunTop, bunBottom] = useSelector((state) => {
+	const [bunTop, bunBottom] = useAppSelector((state) => {
 		return [
 			state.burgerConstructorIngredients.bun,
 			state.burgerConstructorIngredients.bun,
 		];
 	});
 
-	const buns: ReadonlyArray<IIngredientDetails> = useSelector((state) => {
+	const buns: ReadonlyArray<IIngredientDetails> = useAppSelector((state) => {
 		return state.ingredients.buns;
 	});
 
-	const ingredients: ReadonlyArray<IIngredientDetails> = useSelector(
+	const ingredients: ReadonlyArray<IIngredientDetails> = useAppSelector(
 		(state) => {
 			return state.ingredients.items;
 		}
@@ -45,15 +40,15 @@ export const BurgerConstructor = () => {
 
 	const burgerIngredients: ReadonlyArray<
 		IIngredientDetails & { key?: string }
-	> = useSelector((state) => {
+	> = useAppSelector((state) => {
 		return state.burgerConstructorIngredients.items;
 	});
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
-	const order = useSelector((state) => {
+	const order = useAppSelector((state) => {
 		return state.order;
 	});
 
@@ -63,7 +58,7 @@ export const BurgerConstructor = () => {
 		}
 	}, [user.loaded]);
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const [modalVisibility, setModalVisibility] = useState(false);
 
@@ -78,8 +73,7 @@ export const BurgerConstructor = () => {
 			if (currentIngredient) {
 				dispatch(
 					addBurgerIngredientToConstructorAction(
-						currentIngredient,
-						uuidv4()
+						currentIngredient
 					)
 				);
 			}
@@ -151,7 +145,7 @@ export const BurgerConstructor = () => {
 						key="bunTop"
 						item_key="bunTop"
 						draggable={false}
-						name={bunTop.name}
+						name={`${bunTop.name} (верх)`}
 						price={bunTop.price}
 						type="top"
 						image_mobile={bunTop.image_mobile}
@@ -176,7 +170,7 @@ export const BurgerConstructor = () => {
 						key="bunBottom"
 						item_key="bunBottom"
 						draggable={false}
-						name={bunBottom.name}
+						name={`${bunBottom.name} (низ)`}
 						price={bunBottom.price}
 						type="bottom"
 						image_mobile={bunBottom.image_mobile}

@@ -4,15 +4,15 @@ import {
 	PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
 import { AppError } from "../../components/app-error/app-error";
 import { signUp } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { IRegisterFormData } from "../../services/types/auth";
-import { useSelector } from "../../utils/hooks";
 
 export const RegisterPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const [formSended, setFormSended] = useState(false);
 
@@ -22,7 +22,7 @@ export const RegisterPage = () => {
 		password: "",
 	});
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
@@ -49,7 +49,7 @@ export const RegisterPage = () => {
 
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center vh-100`}
+			className={`display_flex display_flex-center text_align_center mt-6`}
 		>
 			<form onSubmit={(e) => registerClickHandler(e)}>
 				<h1 className="text text_type_main-medium">Регистрация</h1>

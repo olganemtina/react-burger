@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router";
 import { FeedDetails } from "../../../components/feed-details/feed-details";
 import { Modal } from "../../../components/modal/modal";
 import { startConnectionAction } from "../../../services/action-creators/feed";
 import { WS_FEED_CONNECTION_START } from "../../../services/action-types/feed";
+import { useAppDispatch } from "../../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../../services/hooks/use-app-selector";
 import { FeedItemWithIngredients } from "../../../services/types/feed";
 import { MatchParams } from "../../../services/types/routing";
 import {
 	ordersAllWsUrl,
 	ordersUserWsUrl,
-} from "../../../services/variables/web-socket";
+} from "../../../services/constants/web-socket";
 import { getCookie } from "../../../utils/cookie";
-import { useSelector } from "../../../utils/hooks";
 import style from "./feed-details.module.scss";
 
 export const FeedDetailsPage = () => {
 	const history = useHistory<{ isModal: boolean; from: string }>();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [model, setModel] = useState<FeedItemWithIngredients | undefined>();
 	const { params } = useRouteMatch<MatchParams>();
 	const [isModal] = useState<boolean>(history.location.state?.isModal);
@@ -27,11 +27,11 @@ export const FeedDetailsPage = () => {
 		history.replace({ pathname: from });
 	}, [from, isModal]);
 
-	const order = useSelector((state) => {
+	const order = useAppSelector((state) => {
 		return state.feed;
 	});
 
-	const ingredients = useSelector((state) => {
+	const ingredients = useAppSelector((state) => {
 		return [...state.ingredients.buns, ...state.ingredients.items];
 	});
 

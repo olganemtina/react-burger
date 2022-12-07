@@ -40,12 +40,11 @@ export type TBurgerConstructorIngredientsAction =
 	| IClearBurgerIngredientsFromConstructorAction;
 
 export const addBurgerIngredientToConstructorAction = (
-	item: IIngredientDetails,
-	key: string
+	item: IIngredientDetails
 ): IAddBurgerIngredientToConstructorAction => {
 	return {
 		type: ADD_BURGER_INGREDIENT_IN_CONSTRUCTOR,
-		item: { ...item, key },
+		item: { ...item },
 	};
 };
 

@@ -1,27 +1,28 @@
 import { useEffect, useCallback, useState } from "react";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { setCurrentIngredientAction } from "../../services/action-creators/current-ingredient";
-import { useDispatch } from "react-redux";
 import { Modal } from "../../components/modal/modal";
 import { IngredientDetails } from "../../components/ingredient-details/ingredient-details";
 import { MatchParams } from "../../services/types/routing";
-import { useSelector } from "../../utils/hooks";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { AppBody } from "../../components/app-body/app-body";
 
 export const IngredientPage = () => {
 	const history = useHistory<{ isModal: boolean }>();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const { params } = useRouteMatch<MatchParams>();
 	const [isModal] = useState<boolean>(history.location.state?.isModal);
 
-	const ingredients = useSelector((state) => {
+	const ingredients = useAppSelector((state) => {
 		return state.ingredients.items;
 	});
 
-	const buns = useSelector((state) => {
+	const buns = useAppSelector((state) => {
 		return state.ingredients.buns;
 	});
 
-	const currentIngredient = useSelector((state) => {
+	const currentIngredient = useAppSelector((state) => {
 		return state.currentIngredient;
 	});
 
@@ -44,12 +45,14 @@ export const IngredientPage = () => {
 		return (
 			<div>
 				{isModal ? (
-					<Modal
-						onClose={handleCloseModal}
-						header="Детали ингредиента"
-					>
-						<IngredientDetails {...currentIngredient} />
-					</Modal>
+					<>
+						<Modal
+							onClose={handleCloseModal}
+							header="Детали ингредиента"
+						>
+							<IngredientDetails {...currentIngredient} />
+						</Modal>
+					</>
 				) : (
 					<IngredientDetails {...currentIngredient} />
 				)}

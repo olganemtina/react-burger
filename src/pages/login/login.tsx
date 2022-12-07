@@ -4,17 +4,17 @@ import {
 	PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import { signIn } from "../../services/action-types/user";
 import { AppError } from "../../components/app-error/app-error";
+import { signIn } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { ILoginFormData } from "../../services/types/auth";
-import { useSelector } from "../../utils/hooks";
 
 export const LoginPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
@@ -48,7 +48,7 @@ export const LoginPage = () => {
 
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center vh-100`}
+			className={`display_flex display_flex-center text_align_center mt-6`}
 		>
 			<form onSubmit={(e) => login(e)}>
 				<h1 className="text text_type_main-medium">Вход</h1>

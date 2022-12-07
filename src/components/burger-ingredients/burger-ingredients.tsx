@@ -10,8 +10,8 @@ import {
 } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { IIngredientDetails } from "../../services/types/ingredient";
-import { useSelector } from "../../utils/hooks";
 import { BurgerIngredient } from "../burger-ingredient/burger-ingredient";
 import style from "./burger-ingredients.module.css";
 
@@ -33,14 +33,14 @@ const getCaption = (type: string) => {
 export const BurgerIngredients = () => {
 	const [current, setCurrent] = useState<string>("bun");
 
-	const buns = useSelector((state) => {
+	const buns = useAppSelector((state) => {
 		return state.ingredients.buns;
 	});
-	const items = useSelector((state) => {
+	const items = useAppSelector((state) => {
 		return state.ingredients.items;
 	});
 
-	const burgerConstructorIngredients = useSelector((state) => {
+	const burgerConstructorIngredients = useAppSelector((state) => {
 		const ingredientsWithBuns = [
 			...state.burgerConstructorIngredients.items,
 		];

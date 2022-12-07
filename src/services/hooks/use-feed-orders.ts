@@ -1,12 +1,12 @@
-import { useSelector } from "../../utils/hooks";
 import { IInitalFeedState } from "../reducers/feed";
 import { RootState } from "../types";
 import { FeedItemWithIngredients } from "../types/feed";
+import { useAppSelector } from "./use-app-selector";
 
 export const useFeedOrders = (
 	getReducerState: (x: RootState) => IInitalFeedState
 ) => {
-	const { orders, total, totalToday } = useSelector((state) => {
+	const { orders, total, totalToday } = useAppSelector((state) => {
 		const ingredients = [
 			...state.ingredients.items,
 			...state.ingredients.buns,

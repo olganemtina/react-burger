@@ -19,6 +19,8 @@ interface IModal {
 	children: ReactNode;
 }
 
+const modalRoot = document.getElementById("modals") as HTMLElement;
+
 export const Modal: FC<IModal> = ({ header, onClose, children }) => {
 	const escapeHandler = useCallback((e: Event) => {
 		onClose(e);
@@ -60,6 +62,6 @@ export const Modal: FC<IModal> = ({ header, onClose, children }) => {
 				{children}
 			</div>
 		</ModalOverlay>,
-		document.body
+		modalRoot
 	);
 };

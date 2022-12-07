@@ -1,8 +1,8 @@
 import doneImg from "../../images/done.svg";
-import { useSelector } from "../../utils/hooks";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 
 export const OrderSendNotify = () => {
-	const order = useSelector((state) => {
+	const order = useAppSelector((state) => {
 		return state.order;
 	});
 	return (

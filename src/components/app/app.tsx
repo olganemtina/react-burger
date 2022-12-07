@@ -13,19 +13,19 @@ import {
 import { FeedPage } from "../../pages/feed/feed";
 import { FeedDetailsPage } from "../../pages/feed/feed-details/feed-details";
 import { getIngredients } from "../../services/action-types/burger-ingredients";
-import { useAppDispatch } from "../../utils/api/request-api-helpers";
-import { useSelector } from "../../utils/hooks";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { AppBody } from "../app-body/app-body";
 import { AppError } from "../app-error/app-error";
 import AppHeader from "../app-header/app-header";
 import { AppLoad } from "../app-load/app-load";
 import { RouteForUnauthorizedUsers } from "../not-authorized-route/not-authorized-route";
 import { ProtectedRoute } from "../protected-route/protected-route";
-import "./app.css";
+import style from "./app.module.scss";
 
 function App() {
 	const { ingredientsRequestFailed, ingredientsRequest, error } =
-		useSelector((state) => {
+		useAppSelector((state) => {
 			return state.ingredients;
 		});
 
@@ -36,7 +36,7 @@ function App() {
 	}, [dispatch]);
 
 	return (
-		<div className="App">
+		<div className={style.App}>
 			<Router>
 				<Switch>
 					<Route path="/" exact>

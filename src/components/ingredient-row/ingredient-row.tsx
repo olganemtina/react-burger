@@ -5,12 +5,14 @@ import { AppAvatar, IAppAvatar } from "../app-avatar/app-avatar";
 export interface IIngredientRaw {
 	text: string;
 	price: number;
+	count: number;
 	thumbnail: string;
 }
 
 export const IngredientRaw: FC<IIngredientRaw> = ({
 	text,
 	price,
+	count,
 	thumbnail,
 }) => {
 	return (
@@ -20,7 +22,7 @@ export const IngredientRaw: FC<IIngredientRaw> = ({
 				{text}
 			</span>
 			<span className="constructor-element__price text text_type_digits-default">
-				{price}
+				{count} X {price} = {count * price}
 				<CurrencyIcon type="primary" />
 			</span>
 		</div>

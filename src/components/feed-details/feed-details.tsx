@@ -1,5 +1,7 @@
-import { FC, useEffect, useRef } from "react";
+import { element } from "prop-types";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { FeedItemWithIngredients } from "../../services/types/feed";
+import { IIngredientDetails } from "../../services/types/ingredient";
 import { OrderStatus } from "../../services/types/status";
 import { classNames } from "../../utils/class-names";
 import { AppDataWithCurrency } from "../app-price/app-price";
@@ -50,17 +52,20 @@ export const FeedDetails: FC<{ order: FeedItemWithIngredients }> = ({
 				</div>
 			</div>
 			<div ref={refScroll} className={style.scroll_container}>
-				{order.ingredientsData.map((ingredient, index) => {
-					return (
-						<div key={`${ingredient._id}${index}`}>
-							<IngredientRaw
-								text={ingredient.name}
-								price={ingredient.price}
-								thumbnail={ingredient.image_mobile}
-							/>
-						</div>
-					);
-				})}
+				{order.ingredientsData.map(
+					({ ingredient, count }, index) => {
+						return (
+							<div key={`${ingredient._id}${index}`}>
+								<IngredientRaw
+									text={ingredient.name}
+									count={count}
+									price={ingredient.price}
+									thumbnail={ingredient.image_mobile}
+								/>
+							</div>
+						);
+					}
+				)}
 			</div>
 			<div className="display_flex display_flex_space_between mt-10">
 				<div className="text text_type_main-default text_color_inactive">

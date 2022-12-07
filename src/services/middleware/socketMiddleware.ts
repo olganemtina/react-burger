@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { Middleware, MiddlewareAPI } from "redux";
 import {
 	closeFeedConnectionAction,
@@ -13,7 +12,7 @@ import {
 } from "../action-types/feed";
 import type { AppDispatch, RootState } from "../types";
 import { IFeed } from "../types/feed";
-import { wsActionsFeed } from "../variables/web-socket";
+import { wsActionsFeed } from "../constants/web-socket";
 
 export type TWsAction = {
 	[item in keyof typeof wsActionsFeed]: typeof wsActionsFeed[item];
