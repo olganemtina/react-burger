@@ -17,9 +17,11 @@ import {
 } from "../../pages";
 import { FeedPage } from "../../pages/feed/feed";
 import { FeedDetailsPage } from "../../pages/feed/feed-details/feed-details";
+import { HomePage } from "../../pages/home/home";
 import { getIngredients } from "../../services/action-types/burger-ingredients";
 import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { PageUrls } from "../../utils/enums/pages";
 import { AppBody } from "../app-body/app-body";
 import { AppError } from "../app-error/app-error";
 import AppHeader from "../app-header/app-header";
@@ -32,18 +34,8 @@ import { ProtectedRoute } from "../protected-route/protected-route";
 import style from "./app.module.scss";
 
 function ModalSwitch() {
-	const dispatch = useAppDispatch();
 	const location = useLocation();
 	const history = useHistory();
-
-	useEffect(() => {
-		dispatch(getIngredients());
-	}, [dispatch]);
-
-	const { ingredientsRequestFailed, ingredientsRequest, error } =
-		useAppSelector((state) => {
-			return state.ingredients;
-		});
 
 	//@ts-ignore
 	const background = location.state && location.state.background;
@@ -52,72 +44,88 @@ function ModalSwitch() {
 		history.replace({ pathname: from });
 	}, []);
 
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(getIngredients());
+	}, [dispatch]);
+
 	return (
 		<div className={`${style.App}`}>
 			<AppHeader />
 			<Switch location={background || location}>
-				<Route path="/" exact>
-					{ingredientsRequestFailed ? (
-						<AppError error={error} />
-					) : ingredientsRequest ? (
-						<AppLoad text="Идет загрузка данных..." />
-					) : (
-						<AppBody />
-					)}
+				<Route path={`${PageUrls.home}`} exact>
+					<HomePage />
 				</Route>
-				<Route path="/feed" exact>
+				<Route path={`${PageUrls.feed}`} exact>
 					<FeedPage />
 				</Route>
-				<Route path="/feed/:id" exact>
+				<Route path={`${PageUrls.feed}/:id`} exact>
 					<FeedDetailsPage />
 				</Route>
-				<RouteForUnauthorizedUsers path="/login" exact>
+				<RouteForUnauthorizedUsers path={`${PageUrls.login}`} exact>
 					<LoginPage />
 				</RouteForUnauthorizedUsers>
-				<RouteForUnauthorizedUsers path="/register" exact>
+				<RouteForUnauthorizedUsers
+					path={`${PageUrls.register}`}
+					exact
+				>
 					<RegisterPage />
 				</RouteForUnauthorizedUsers>
-				<RouteForUnauthorizedUsers path="/forgot-password" exact>
+				<RouteForUnauthorizedUsers
+					path={`${PageUrls.forgotPassword}`}
+					exact
+				>
 					<ForgotPasswordPage />
 				</RouteForUnauthorizedUsers>
-				<RouteForUnauthorizedUsers path="/reset-password" exact>
+				<RouteForUnauthorizedUsers
+					path={`${PageUrls.resetPassword}`}
+					exact
+				>
 					<ResetPasswordPage />
 				</RouteForUnauthorizedUsers>
-				<ProtectedRoute path={"/profile"} exact>
+				<ProtectedRoute path={`${PageUrls.profile}`} exact>
 					<ProfileContainerPage>
 						<ProfilePage />
 					</ProfileContainerPage>
 				</ProtectedRoute>
-				<ProtectedRoute path={"/profile/orders"} exact>
+				<ProtectedRoute path={`${PageUrls.profileOrders}`} exact>
 					<ProfileContainerPage>
 						<ProfileOrdersPage />
 					</ProfileContainerPage>
 				</ProtectedRoute>
-				<ProtectedRoute path={"/profile/orders/:id"} exact>
+				<ProtectedRoute
+					path={`${PageUrls.profileOrders}/:id`}
+					exact
+				>
 					<FeedDetailsPage />
 				</ProtectedRoute>
-				<Route path="/ingredients/:id" exact>
+				<Route path={`${PageUrls.ingredients}/:id`} exact>
 					<IngredientDetails />
 				</Route>
 			</Switch>
 
 			{background && (
 				<Switch>
-					<Route path="/ingredients/:id">
+					<Route path={`${PageUrls.ingredients}/:id`}>
 						<Modal
-							onClose={() => onClose("/")}
+							onClose={() => onClose(PageUrls.home)}
 							header="Детали ингредиента"
 						>
 							<IngredientDetails />
 						</Modal>
 					</Route>
-					<Route path="/profile/orders/:id">
-						<Modal onClose={() => onClose("/profile/orders")}>
+					<Route path={`${PageUrls.profileOrders}/:id`}>
+						<Modal
+							onClose={() =>
+								onClose(PageUrls.profileOrders)
+							}
+						>
 							<FeedDetails />
 						</Modal>
 					</Route>
 					<Route path="/feed/:id">
-						<Modal onClose={() => onClose("/feed")}>
+						<Modal onClose={() => onClose(PageUrls.feed)}>
 							<FeedDetails />
 						</Modal>
 					</Route>

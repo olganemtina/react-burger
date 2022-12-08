@@ -1,5 +1,5 @@
+import { OrderStatus, OrderStatusLabel } from "../../utils/enums/status";
 import { IIngredientDetails } from "./ingredient";
-import { OrderStatus, OrderStatusLabel } from "./status";
 
 export interface IFeed {
 	orders: ReadonlyArray<CFeedItem>;

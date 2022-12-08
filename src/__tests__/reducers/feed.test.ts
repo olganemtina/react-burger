@@ -3,7 +3,7 @@ import { TOrderAction } from "../../services/action-creators/order";
 import * as types from "../../services/action-types/feed";
 import { CFeedItem, IFeed } from "../../services/types/feed";
 import feedReducer, { initalFeedState } from "../../services/reducers/feed";
-import { OrderStatus } from "../../services/types/status";
+import { OrderStatus } from "../../utils/enums/status";
 
 const orders: ReadonlyArray<CFeedItem> = [
 	{

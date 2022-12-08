@@ -10,12 +10,12 @@ import {
 import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useFeedOrders } from "../../services/hooks/use-feed-orders";
 import { RootState } from "../../services/types";
-import { OrderStatus } from "../../services/types/status";
 import { ordersAllWsUrl } from "../../services/constants/web-socket";
 import { classNames } from "../../utils/class-names";
 import {} from "../../utils/date-extensions";
 import style from "./feed.module.scss";
 import { FeedItemWithIngredients } from "../../services/types/feed";
+import { OrderStatus } from "../../utils/enums/status";
 
 export const FeedPage = () => {
 	const history = useHistory();

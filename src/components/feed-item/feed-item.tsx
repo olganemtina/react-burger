@@ -1,7 +1,8 @@
 import { FC, useCallback, useMemo } from "react";
 import { FeedItemWithIngredients } from "../../services/types/feed";
-import { OrderStatus } from "../../services/types/status";
+
 import { classNames } from "../../utils/class-names";
+import { OrderStatus } from "../../utils/enums/status";
 import { AppAvatarList } from "../app-avatar-list/app-avatar-list";
 import { AppDataWithCurrency } from "../app-price/app-price";
 

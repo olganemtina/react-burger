@@ -8,9 +8,9 @@ import {
 import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { FeedItemWithIngredients } from "../../services/types/feed";
-import { OrderStatus } from "../../services/types/status";
 import { classNames } from "../../utils/class-names";
 import { getCookie } from "../../utils/cookie";
+import { OrderStatus } from "../../utils/enums/status";
 import { AppDataWithCurrency } from "../app-price/app-price";
 import { IngredientRaw } from "../ingredient-row/ingredient-row";
 import style from "./feed-details.module.scss";

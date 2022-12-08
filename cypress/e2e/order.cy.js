@@ -1,3 +1,5 @@
+import * as CONSTANTS from "./test-constants";
+
 describe("create order", () => {
 	beforeEach(() => {
 		cy.visit("/");
@@ -20,12 +22,12 @@ describe("create order", () => {
 			if (
 				cy
 					.get("body", { timeout: 20000 })
-					.find("[data-testid=order-number]")
+					.find(CONSTANTS.ORDER_NUMBER)
 					.children("div").length
 			) {
 				cy.get(".close-button").click();
 			} else {
-				cy.get("[data-testid=order-number]")
+				cy.get(CONSTANTS.ORDER_NUMBER)
 					.contains("Пожалуйста, добавьте булки в бургер")
 					.should("exist");
 				cy.get(".close-button").click();
@@ -36,39 +38,39 @@ describe("create order", () => {
 	it("should open modal with choosen orders", () => {
 		const dataTransfer = new DataTransfer();
 
-		cy.get("[data-testid=draggable-item]").first().trigger("dragstart", {
+		cy.get(CONSTANTS.DRAGGABLE_ITEM).first().trigger("dragstart", {
 			dataTransfer,
 		});
 
-		cy.get("[data-testid=drop-area]").trigger("drop", {
+		cy.get(CONSTANTS.DROP_AREA).trigger("drop", {
 			dataTransfer,
 		});
 
-		cy.get("[data-testid=draggable-item]").last().trigger("dragstart", {
+		cy.get(CONSTANTS.DRAGGABLE_ITEM).last().trigger("dragstart", {
 			dataTransfer,
 		});
 
-		cy.get("[data-testid=drop-area]").trigger("drop", {
+		cy.get(CONSTANTS.DROP_AREA).trigger("drop", {
 			dataTransfer,
 		});
 
-		cy.get("[data-testid=drop-area]")
+		cy.get(CONSTANTS.DROP_AREA)
 			.find(".constructor-element")
 			.should("have.length", 3);
 
 		cy.get("button").contains("Оформить заказ").click();
-		cy.get("[data-testid=order-number]").contains("123").should("exist");
+		cy.get(CONSTANTS.ORDER_NUMBER).contains("123").should("exist");
 	});
 
 	it("should open ingredient details modal", function () {
-		cy.get("[data-testid=current-ingredient-name]")
+		cy.get(CONSTANTS.CURRENT_INGREDIENT_NAME)
 			.first()
 			.as("currentIngredient");
 		cy.get("@currentIngredient").invoke("text").as("SourceText");
 
 		cy.get("@currentIngredient").click();
 
-		cy.get("[data-testid=modal-current-ingredient-name]")
+		cy.get(CONSTANTS.MODAL_CURRENT_INGREDIENT_NAME)
 			.invoke("text")
 			.as("TargetText");
 
