@@ -1,20 +1,19 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { FeedItem } from "../../../components/feed-item/feed-item";
 import {
 	closeFeedConnectionAction,
 	startConnectionAction,
 } from "../../../services/action-creators/feed";
-import { useFeedOrders } from "../../../services/hooks/useFeedOrders";
+import { useAppDispatch } from "../../../services/hooks/use-app-dispatch";
+import { useFeedOrders } from "../../../services/hooks/use-feed-orders";
 import { RootState } from "../../../services/types";
-import { ordersUserWsUrl } from "../../../services/variables/web-socket";
+import { ordersUserWsUrl } from "../../../services/constants/web-socket";
 import { getCookie } from "../../../utils/cookie";
 import style from "./profile-orders.module.scss";
-import { v4 as uuidv4 } from "uuid";
 
 export const ProfileOrdersPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const location = useLocation();
 	const history = useHistory();
 
@@ -44,7 +43,7 @@ export const ProfileOrdersPage = () => {
 		(id: string) => {
 			history.push({
 				pathname: `/profile/orders/${id}`,
-				state: { isModal: true, from: location.pathname },
+				state: { background: location },
 			});
 		},
 		[orders]

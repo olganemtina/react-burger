@@ -1,7 +1,8 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { FeedItemWithIngredients } from "../../services/types/feed";
-import { OrderStatus } from "../../services/types/status";
+
 import { classNames } from "../../utils/class-names";
+import { OrderStatus } from "../../utils/enums/status";
 import { AppAvatarList } from "../app-avatar-list/app-avatar-list";
 import { AppDataWithCurrency } from "../app-price/app-price";
 
@@ -17,6 +18,10 @@ export const FeedItem: FC<{
 		"pt-2",
 		order.status == OrderStatus.done ? "feed_state_active" : ""
 	);
+
+	const items = useMemo(() => {
+		return order.ingredientsData.map((x) => x.ingredient);
+	}, [order.ingredientsData]);
 
 	return (
 		<div
@@ -42,10 +47,7 @@ export const FeedItem: FC<{
 				)}
 			</div>
 			<div className="display_flex display_flex_space_between">
-				<AppAvatarList
-					items={order.ingredientsData}
-					showCount={3}
-				/>
+				<AppAvatarList items={items} showCount={3} />
 				<div className="text text_type_digits-default">
 					<AppDataWithCurrency data={order.totalPrice} />
 				</div>

@@ -4,25 +4,29 @@ import {
 	PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
 import { AppError } from "../../components/app-error/app-error";
 import { signUp } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { useForm } from "../../services/hooks/use-form";
 import { IRegisterFormData } from "../../services/types/auth";
-import { useSelector } from "../../utils/hooks";
+import { classNames } from "../../utils/class-names";
 
 export const RegisterPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const [formSended, setFormSended] = useState(false);
 
-	const [formData, setFormData] = useState<IRegisterFormData>({
-		name: "",
-		email: "",
-		password: "",
-	});
+	const { formData, handleChange, setFormData } = useForm<IRegisterFormData>(
+		{
+			name: "",
+			email: "",
+			password: "",
+		}
+	);
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
@@ -35,21 +39,16 @@ export const RegisterPage = () => {
 		[formData]
 	);
 
-	const setValue = (e: SyntheticEvent<HTMLInputElement>) => {
-		const { name, value } = e.target as HTMLInputElement;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
-
 	if (!user.loaded) {
 		return <Redirect to="/" />;
 	}
 
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center vh-100`}
+			className={classNames(
+				"form_container_center_page",
+				"text_align_center"
+			)}
 		>
 			<form onSubmit={(e) => registerClickHandler(e)}>
 				<h1 className="text text_type_main-medium">Регистрация</h1>
@@ -60,7 +59,7 @@ export const RegisterPage = () => {
 					<Input
 						type={"text"}
 						placeholder={"Имя"}
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.name}
 						name={"name"}
 						size={"default"}
@@ -70,7 +69,7 @@ export const RegisterPage = () => {
 					<Input
 						type={"text"}
 						placeholder={"E-mail"}
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.email}
 						name={"email"}
 						size={"default"}
@@ -78,7 +77,7 @@ export const RegisterPage = () => {
 				</div>
 				<div className="mt-6">
 					<PasswordInput
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.password}
 						name={"password"}
 					/>

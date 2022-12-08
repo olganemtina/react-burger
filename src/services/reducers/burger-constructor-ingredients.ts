@@ -14,7 +14,7 @@ export interface IInitialBurgerConstructorIngredientsState {
 	bun: IIngredientDetails | null;
 }
 
-const initialBurgerConstructorIngredientsState: IInitialBurgerConstructorIngredientsState =
+export const initialBurgerConstructorIngredientsState: IInitialBurgerConstructorIngredientsState =
 	{
 		items: [],
 		bun: null,

@@ -1,12 +1,12 @@
 import doneImg from "../../images/done.svg";
-import { useSelector } from "../../utils/hooks";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 
 export const OrderSendNotify = () => {
-	const order = useSelector((state) => {
+	const order = useAppSelector((state) => {
 		return state.order;
 	});
 	return (
-		<div className="text_align_center">
+		<div className="text_align_center" data-testid="order-number">
 			{!order.orderRequestFailed && !order.orderRequest && (
 				<div>
 					<div className="text text_type_digits-large">

@@ -1,5 +1,5 @@
+import { OrderStatus, OrderStatusLabel } from "../../utils/enums/status";
 import { IIngredientDetails } from "./ingredient";
-import { OrderStatus, OrderStatusLabel } from "./status";
 
 export interface IFeed {
 	orders: ReadonlyArray<CFeedItem>;
@@ -9,7 +9,7 @@ export interface IFeed {
 }
 
 export class CFeedItem {
-	ingredients: ReadonlyArray<string> = [];
+	ingredients: Array<string> = [];
 	_id!: string;
 	status!: OrderStatus;
 	number!: number;
@@ -31,13 +31,15 @@ export class FeedItemWithIngredients extends CFeedItem {
 	}
 
 	get totalPrice(): number {
-		return this.ingredientsData.reduce((sum, current) => {
-			sum += current.price;
-			return sum;
-		}, 0);
+		let sum = 0;
+		this.ingredientsData.forEach((value) => {
+			sum += value.count * value.ingredient.price;
+		});
+		return sum;
 	}
 
-	ingredientsData: IIngredientDetails[] = [];
+	ingredientsData: Array<{ ingredient: IIngredientDetails; count: number }> =
+		[];
 
 	get statusCaption(): string | undefined {
 		return OrderStatusLabel.get(this.status as OrderStatus);
@@ -52,21 +54,29 @@ export class FeedItemWithIngredients extends CFeedItem {
 	}
 
 	setIngredients(allIngredients: IIngredientDetails[]) {
-		// this.ingredientsData = allIngredients.filter((ingredient) =>
-		// 	this.ingredients.find((id) => id === ingredient._id)
-		// );
 		const allIngredientsMap = allIngredients.reduce((acc, current) => {
 			acc.set(current._id, current);
 			return acc;
 		}, new Map() as Map<string, IIngredientDetails>);
 
-		this.ingredientsData = this.ingredients
-			.map((ingredient) => {
-				return allIngredientsMap.get(ingredient);
-			})
-			.filter(
-				(ingredient): ingredient is IIngredientDetails =>
-					!!ingredient
-			);
+		const mapData = this.ingredients.reduce((map, ingredient) => {
+			const ingredientData = allIngredientsMap.get(ingredient);
+			if (ingredientData) {
+				let mapData = map.get(ingredientData);
+				if (mapData) {
+					map.set(ingredientData, ++mapData);
+				} else {
+					map.set(ingredientData, 1);
+				}
+			}
+			return map;
+		}, new Map() as Map<IIngredientDetails, number>);
+
+		this.ingredientsData = Array.from(mapData).map((elem) => {
+			return {
+				ingredient: elem[0],
+				count: elem[1],
+			};
+		});
 	}
 }

@@ -1,20 +1,20 @@
 import { FC, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Redirect, Route } from "react-router";
 import {
 	IRouterParams,
 	TRouteForUnauthorizedUsers,
 } from "../../services/types/routing";
 import { getUser } from "../../services/action-types/user";
-import { useSelector } from "../../utils/hooks";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
 
 export const ProtectedRoute: FC<TRouteForUnauthorizedUsers<IRouterParams>> = ({
 	children,
 	...rest
 }) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 

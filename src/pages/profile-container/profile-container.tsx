@@ -1,15 +1,15 @@
 import React, { FC, useCallback } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AppNavItem } from "../../components/app-nav-item/app-nav-item";
 import { signOut } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import style from "./profile-container.module.css";
 
 export const ProfileContainerPage: FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const history = useHistory();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const logoutHandler = useCallback(async () => {
 		dispatch(signOut());

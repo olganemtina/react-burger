@@ -32,7 +32,9 @@ export default function AppHeader() {
 						</span>
 					</AppNavItem>
 				</div>
-				<Logo />
+				<AppNavItem exact path="/">
+					<Logo />
+				</AppNavItem>
 				<div>
 					<AppNavItem
 						exact

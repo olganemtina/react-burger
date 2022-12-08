@@ -4,34 +4,28 @@ import {
 	PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { SyntheticEvent, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import { signIn } from "../../services/action-types/user";
 import { AppError } from "../../components/app-error/app-error";
+import { signIn } from "../../services/action-types/user";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useAppSelector } from "../../services/hooks/use-app-selector";
+import { useForm } from "../../services/hooks/use-form";
 import { ILoginFormData } from "../../services/types/auth";
-import { useSelector } from "../../utils/hooks";
+import { classNames } from "../../utils/class-names";
 
 export const LoginPage = () => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
-	const user = useSelector((state) => {
+	const user = useAppSelector((state) => {
 		return state.user;
 	});
 
-	const [formData, setFormData] = useState<ILoginFormData>({
+	const { formData, handleChange, setFormData } = useForm<ILoginFormData>({
 		email: "",
 		password: "",
 	});
 
 	const [formSended, setFormSended] = useState(false);
-
-	const setValue = (evt: SyntheticEvent<HTMLInputElement>) => {
-		const { name, value } = evt.target as HTMLInputElement;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
 
 	const login = useCallback(
 		async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -48,7 +42,10 @@ export const LoginPage = () => {
 
 	return (
 		<div
-			className={`display_flex display_flex-center text_align_center vh-100`}
+			className={classNames(
+				"form_container_center_page",
+				"text_align_center"
+			)}
 		>
 			<form onSubmit={(e) => login(e)}>
 				<h1 className="text text_type_main-medium">Вход</h1>
@@ -59,7 +56,7 @@ export const LoginPage = () => {
 					<Input
 						type={"text"}
 						placeholder={"E-mail"}
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.email}
 						name={"email"}
 						error={false}
@@ -69,7 +66,7 @@ export const LoginPage = () => {
 				</div>
 				<div className="mt-6">
 					<PasswordInput
-						onChange={(e) => setValue(e)}
+						onChange={(e) => handleChange(e)}
 						value={formData.password}
 						name={"password"}
 					/>

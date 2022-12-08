@@ -6,7 +6,7 @@ import {
 } from "../action-types/burger-ingredients";
 import { IIngredientDetails } from "../types/ingredient";
 
-export interface IInitialIngredientsState{
+export interface IInitialIngredientsState {
 	items: ReadonlyArray<IIngredientDetails>;
 	buns: ReadonlyArray<IIngredientDetails>;
 	ingredientsRequest: boolean;
@@ -14,7 +14,7 @@ export interface IInitialIngredientsState{
 	error: string;
 }
 
-const initialIngredientsState: IInitialIngredientsState = {
+export const initialIngredientsState: IInitialIngredientsState = {
 	items: [],
 	buns: [],
 	ingredientsRequest: false,

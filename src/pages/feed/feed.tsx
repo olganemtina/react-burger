@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 import { AppCollection } from "../../components/app-collection/app-collection";
 import { FeedItem } from "../../components/feed-item/feed-item";
 import { InfoCard } from "../../components/info-card/info-card";
@@ -9,18 +7,20 @@ import {
 	closeFeedConnectionAction,
 	startConnectionAction,
 } from "../../services/action-creators/feed";
-import { useFeedOrders } from "../../services/hooks/useFeedOrders";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
+import { useFeedOrders } from "../../services/hooks/use-feed-orders";
 import { RootState } from "../../services/types";
-import { OrderStatus } from "../../services/types/status";
-import { ordersAllWsUrl } from "../../services/variables/web-socket";
+import { ordersAllWsUrl } from "../../services/constants/web-socket";
 import { classNames } from "../../utils/class-names";
 import {} from "../../utils/date-extensions";
 import style from "./feed.module.scss";
+import { FeedItemWithIngredients } from "../../services/types/feed";
+import { OrderStatus } from "../../utils/enums/status";
 
 export const FeedPage = () => {
 	const history = useHistory();
 	const location = useLocation<{ isModal: boolean }>();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const { orders, total, totalToday } = useFeedOrders((x: RootState) => {
 		return x.feed;
@@ -51,10 +51,10 @@ export const FeedPage = () => {
 		(id: string) => {
 			history.push({
 				pathname: `/feed/${id}`,
-				state: { isModal: true, from: location.pathname },
+				state: { background: location },
 			});
 		},
-		[orders]
+		[dispatch, orders]
 	);
 
 	return (
@@ -69,8 +69,8 @@ export const FeedPage = () => {
 					Лента заказов
 				</div>
 				<div className="pr-4">
-					{orders.map((order) => (
-						<div key={uuidv4()}>
+					{orders.map((order, index) => (
+						<div key={`${order._id}_${index}`}>
 							<FeedItem
 								order={order}
 								openModal={() =>
