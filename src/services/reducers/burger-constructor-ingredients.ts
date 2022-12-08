@@ -28,10 +28,7 @@ export default function burgerConstructorIngredientsReducer(
 		case ADD_BURGER_INGREDIENT_IN_CONSTRUCTOR: {
 			return {
 				...state,
-				items: [
-					...state.items,
-					{ ...action.item, key: action.item._id },
-				],
+				items: [...state.items, { ...action.item }],
 			};
 		}
 		case REMOVE_BURGER_INGREDIENT_FROM_CONSTRUCTOR: {

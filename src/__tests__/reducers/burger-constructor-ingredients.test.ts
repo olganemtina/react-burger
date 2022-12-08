@@ -26,10 +26,7 @@ describe("burger constructor ingredients reducer", () => {
 			})
 		).toEqual({
 			...initialState,
-			items: [
-				...initialState.items,
-				{ ...currentIngredient, key: currentIngredient._id },
-			],
+			items: [...initialState.items, { ...currentIngredient }],
 		});
 	});
 

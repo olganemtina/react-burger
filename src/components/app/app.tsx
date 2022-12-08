@@ -94,7 +94,7 @@ function ModalSwitch() {
 					</ProfileContainerPage>
 				</ProtectedRoute>
 				<ProtectedRoute path={"/profile/orders/:id"} exact>
-					<FeedDetails />
+					<FeedDetailsPage />
 				</ProtectedRoute>
 				<Route path="/ingredients/:id" exact>
 					<IngredientDetails />

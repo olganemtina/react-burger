@@ -18,6 +18,7 @@ import { AppDataWithCurrency } from "../app-price/app-price";
 import { BurgerConstructorItem } from "../burger-constructor-item/burger-constructor-item";
 import { Modal } from "../modal/modal";
 import { OrderSendNotify } from "../order-send-notify/order-send-notify";
+import { v4 as uuidv4 } from "uuid";
 import style from "./burger-constructor.module.css";
 
 export const BurgerConstructor = () => {
@@ -73,7 +74,8 @@ export const BurgerConstructor = () => {
 			if (currentIngredient) {
 				dispatch(
 					addBurgerIngredientToConstructorAction(
-						currentIngredient
+						currentIngredient,
+						uuidv4()
 					)
 				);
 			}
@@ -114,7 +116,7 @@ export const BurgerConstructor = () => {
 		if (order.orderNumber) {
 			dispatch(clearBurgerIngredientsFromConstructorAction());
 		}
-	}, [order.orderNumber]);
+	}, [dispatch, order]);
 
 	const totalPrice = useMemo(() => {
 		let burgerBunsPrice = 0;

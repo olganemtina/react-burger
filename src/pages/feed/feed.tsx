@@ -15,6 +15,7 @@ import { ordersAllWsUrl } from "../../services/constants/web-socket";
 import { classNames } from "../../utils/class-names";
 import {} from "../../utils/date-extensions";
 import style from "./feed.module.scss";
+import { FeedItemWithIngredients } from "../../services/types/feed";
 
 export const FeedPage = () => {
 	const history = useHistory();
@@ -53,7 +54,7 @@ export const FeedPage = () => {
 				state: { background: location },
 			});
 		},
-		[orders]
+		[dispatch, orders]
 	);
 
 	return (
@@ -69,7 +70,7 @@ export const FeedPage = () => {
 				</div>
 				<div className="pr-4">
 					{orders.map((order, index) => (
-						<div key={`${order}_${index}`}>
+						<div key={`${order._id}_${index}`}>
 							<FeedItem
 								order={order}
 								openModal={() =>

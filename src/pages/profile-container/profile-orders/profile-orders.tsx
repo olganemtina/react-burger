@@ -43,7 +43,7 @@ export const ProfileOrdersPage = () => {
 		(id: string) => {
 			history.push({
 				pathname: `/profile/orders/${id}`,
-				state: { isModal: true, from: location.pathname },
+				state: { background: location },
 			});
 		},
 		[orders]
