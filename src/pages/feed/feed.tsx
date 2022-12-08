@@ -50,7 +50,7 @@ export const FeedPage = () => {
 		(id: string) => {
 			history.push({
 				pathname: `/feed/${id}`,
-				state: { isModal: true, from: location.pathname },
+				state: { background: location },
 			});
 		},
 		[orders]

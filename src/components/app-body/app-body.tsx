@@ -1,6 +1,5 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { IngredientPage } from "../../pages/ingredient/ingredient";
 import { BurgerConstructor } from "../burger-constructor/burger-constructor";
 import { BurgerIngredients } from "../burger-ingredients/burger-ingredients";
 

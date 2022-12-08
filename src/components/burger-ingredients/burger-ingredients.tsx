@@ -8,8 +8,9 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { setCurrentIngredientAction } from "../../services/action-creators/current-ingredient";
+import { useAppDispatch } from "../../services/hooks/use-app-dispatch";
 import { useAppSelector } from "../../services/hooks/use-app-selector";
 import { IIngredientDetails } from "../../services/types/ingredient";
 import { BurgerIngredient } from "../burger-ingredient/burger-ingredient";
@@ -31,6 +32,7 @@ const getCaption = (type: string) => {
 };
 
 export const BurgerIngredients = () => {
+	let location = useLocation();
 	const [current, setCurrent] = useState<string>("bun");
 
 	const buns = useAppSelector((state) => {
@@ -58,14 +60,15 @@ export const BurgerIngredients = () => {
 		}, {} as Record<string, number>);
 	});
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const history = useHistory();
 
 	const handleOpenModal = useCallback(
 		(ingredient: IIngredientDetails) => {
+			dispatch(setCurrentIngredientAction(ingredient));
 			history.push({
 				pathname: `/ingredients/${ingredient._id}`,
-				state: { isModal: true },
+				state: { background: location },
 			});
 		},
 		[dispatch]
